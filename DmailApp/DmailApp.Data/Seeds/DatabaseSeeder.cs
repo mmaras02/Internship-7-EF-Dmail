@@ -202,30 +202,30 @@ public class DatabaseSeeder
                         MailStatus=MailStatus.Unread
                     }
                 });
-        builder.Entity<SpamFlag>()
-           .HasData(new List<SpamFlag>
+        builder.Entity<Spam>()
+           .HasData(new List<Spam>
                 {
-                    new SpamFlag()
+                    new Spam()
                     {
                         UserId=1,
                         SpamUserId=2
                     },
-                    new SpamFlag()
+                    new Spam()
                     {
                         UserId=1,
                         SpamUserId=4
                     },
-                    new SpamFlag()
+                    new Spam()
                     {
                         UserId=2,
                         SpamUserId=1
                     },
-                    new SpamFlag()
+                    new Spam()
                     {
                         UserId=3,
                         SpamUserId=6
                     },
-                    new SpamFlag()
+                    new Spam()
                     {
                         UserId=4,
                         SpamUserId=1

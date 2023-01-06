@@ -3,7 +3,7 @@ using DmailApp.Data.Entities.Models;
 
 namespace DmailApp.Data.Entities.Models;
 
-public class SpamFlag
+public class Spam
 {
     public int UserId { get; set; }
     public User User { get; set; }

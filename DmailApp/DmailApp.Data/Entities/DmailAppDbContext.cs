@@ -13,7 +13,7 @@ public class DmailAppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Mail> Mails => Set<Mail>();
-    public DbSet<SpamFlag> SpamFlag => Set<SpamFlag>();
+    public DbSet<Spam> SpamFlag => Set<Spam>();
     public DbSet<ReceiverMail> Recipients => Set<ReceiverMail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,10 +44,10 @@ public class DmailAppDbContext : DbContext
             .HasDiscriminator<string>("user_type")
             .HasValue<User>("user");
 
-        modelBuilder.Entity<SpamFlag>()
+        modelBuilder.Entity<Spam>()
             .HasKey(s => new { s.UserId, s.SpamUserId });
 
-        modelBuilder.Entity<SpamFlag>()
+        modelBuilder.Entity<Spam>()
             .HasOne(s => s.User)
             .WithMany(u => u.SpamUsers)
             .HasForeignKey(s => s.UserId);

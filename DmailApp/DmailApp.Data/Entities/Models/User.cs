@@ -13,6 +13,6 @@ public class User
 
     public ICollection<Mail> SentMail { get; } = new List<Mail>();
     public ICollection<ReceiverMail> ReceivedMail { get; } = new List<ReceiverMail>();
-    public ICollection<SpamFlag> SpamUsers { get; } = new List<SpamFlag>();
+    public ICollection<Spam> SpamUsers { get; } = new List<Spam>();
 
 }

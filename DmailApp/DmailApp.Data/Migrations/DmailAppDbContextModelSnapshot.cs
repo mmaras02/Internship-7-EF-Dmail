@@ -60,7 +60,7 @@ namespace DmailApp.Data.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Mails");
+                    b.ToTable("Mails", (string)null);
 
                     b.HasDiscriminator<string>("mail_type").HasValue("mail");
 
@@ -170,7 +170,7 @@ namespace DmailApp.Data.Migrations
 
                     b.HasIndex("MailId");
 
-                    b.ToTable("Recipients");
+                    b.ToTable("Recipients", (string)null);
 
                     b.HasData(
                         new
@@ -253,7 +253,7 @@ namespace DmailApp.Data.Migrations
 
                     b.HasIndex("SpamUserId");
 
-                    b.ToTable("SpamFlag");
+                    b.ToTable("SpamFlag", (string)null);
 
                     b.HasData(
                         new
@@ -308,7 +308,7 @@ namespace DmailApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasDiscriminator<string>("user_type").HasValue("user");
 
