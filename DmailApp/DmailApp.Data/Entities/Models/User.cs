@@ -9,6 +9,7 @@ public class User
     public int Id { get; set; }
     public string Email { get; set; }
     public string? Password { get; set; } = null!;
+    public byte[] HashedPassword { get; set; }
 
     public ICollection<Mail> SentMail { get; } = new List<Mail>();
     public ICollection<ReceiverMail> ReceivedMail { get; } = new List<ReceiverMail>();
