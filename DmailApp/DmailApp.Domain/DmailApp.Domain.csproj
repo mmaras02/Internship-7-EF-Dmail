@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DmailApp.Data\DmailApp.Data.csproj" />
+  </ItemGroup>
+
 </Project>
