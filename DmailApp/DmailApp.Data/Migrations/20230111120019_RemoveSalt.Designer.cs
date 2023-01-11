@@ -3,6 +3,7 @@ using System;
 using DmailApp.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DmailApp.Data.Migrations
 {
     [DbContext(typeof(DmailAppDbContext))]
-    partial class DmailAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230111120019_RemoveSalt")]
+    partial class RemoveSalt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,9 +297,6 @@ namespace DmailApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("FailedLogin")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<byte[]>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("bytea");
@@ -320,42 +319,36 @@ namespace DmailApp.Data.Migrations
                         {
                             Id = 1,
                             Email = "mate.matic@gmail.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 177, 9, 243, 187, 188, 36, 78, 184, 36, 65, 145, 126, 208, 109, 97, 139, 144, 8, 221, 9, 179, 190, 253, 27, 94, 7, 57, 76, 112, 106, 139, 185, 128, 177, 215, 120, 94, 89, 118, 236, 4, 155, 70, 223, 95, 19, 38, 175, 90, 46, 166, 209, 3, 253, 7, 201, 83, 133, 255, 171, 12, 172, 188, 134 }
                         },
                         new
                         {
                             Id = 2,
                             Email = "zeljana.zekic@gmail.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 76, 187, 208, 171, 143, 255, 143, 248, 125, 119, 85, 15, 51, 217, 88, 117, 68, 43, 61, 142, 111, 66, 179, 82, 121, 202, 7, 157, 91, 227, 87, 239, 48, 244, 140, 112, 96, 120, 144, 214, 21, 175, 193, 145, 92, 69, 93, 24, 206, 159, 64, 187, 5, 215, 7, 120, 111, 251, 188, 204, 44, 103, 3, 188 }
                         },
                         new
                         {
                             Id = 3,
                             Email = "anitamilic01@dump.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 253, 231, 209, 108, 150, 177, 223, 16, 240, 116, 32, 63, 71, 4, 75, 136, 233, 186, 205, 125, 174, 214, 196, 130, 161, 33, 186, 159, 176, 180, 222, 227, 10, 16, 37, 80, 170, 124, 119, 177, 241, 195, 83, 141, 101, 152, 31, 15, 143, 135, 112, 181, 217, 83, 147, 42, 233, 158, 85, 95, 3, 50, 234, 253 }
                         },
                         new
                         {
                             Id = 4,
                             Email = "ivo.ivic@gmail.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 85, 178, 150, 46, 60, 225, 189, 147, 48, 215, 44, 147, 3, 192, 221, 248, 52, 173, 47, 3, 141, 152, 109, 41, 99, 149, 241, 5, 165, 232, 199, 212, 129, 57, 33, 77, 79, 82, 254, 61, 179, 110, 49, 68, 178, 180, 77, 85, 113, 173, 179, 184, 252, 124, 33, 183, 183, 217, 139, 74, 68, 12, 103, 9 }
                         },
                         new
                         {
                             Id = 5,
                             Email = "marko.caric@dump.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 177, 9, 243, 187, 188, 36, 78, 184, 36, 65, 145, 126, 208, 109, 97, 139, 144, 8, 221, 9, 179, 190, 253, 27, 94, 7, 57, 76, 112, 106, 139, 185, 128, 177, 215, 120, 94, 89, 118, 236, 4, 155, 70, 223, 95, 19, 38, 175, 90, 46, 166, 209, 3, 253, 7, 201, 83, 133, 255, 171, 12, 172, 188, 134 }
                         },
                         new
                         {
                             Id = 6,
                             Email = "kate.bulj@gmail.com",
-                            FailedLogin = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashedPassword = new byte[] { 177, 9, 243, 187, 188, 36, 78, 184, 36, 65, 145, 126, 208, 109, 97, 139, 144, 8, 221, 9, 179, 190, 253, 27, 94, 7, 57, 76, 112, 106, 139, 185, 128, 177, 215, 120, 94, 89, 118, 236, 4, 155, 70, 223, 95, 19, 38, 175, 90, 46, 166, 209, 3, 253, 7, 201, 83, 133, 255, 171, 12, 172, 188, 134 }
                         });
                 });

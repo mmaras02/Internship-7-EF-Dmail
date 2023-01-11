@@ -1,7 +1,7 @@
 ﻿using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 
-namespace TodoApp.Domain.Factories;
+namespace DmailApp.Domain.Factories;
 
 public class RepositoryFactory
 {

@@ -1,6 +1,6 @@
-﻿using DmailApp.Data.Entities;
+﻿using DmailApp.Domain.Enums;
+using DmailApp.Data.Entities;
 using DmailApp.Data.Entities.Models;
-using StackInternship.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ public class SpamRepository : BaseRepository
 {
     public SpamRepository(DmailAppDbContext dbContext) : base(dbContext) { }
 
-    public ResponseResultType Add(Spam spamUser)
+    public ResponseResultType Add(SpamFlag spamUser)
     {
         DbContext.SpamFlag.Add(spamUser);
 

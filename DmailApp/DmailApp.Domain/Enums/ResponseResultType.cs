@@ -1,4 +1,4 @@
-﻿namespace StackInternship.Domain.Enums;
+﻿namespace DmailApp.Domain.Enums;
 
 public enum ResponseResultType
 {
@@ -6,5 +6,6 @@ public enum ResponseResultType
     NotFound,
     AlreadyExists,
     NoChanges,
+    Error,
     ValidationError
 }

@@ -1,12 +1,14 @@
 ﻿using DmailApp.Data.Entities;
 using DmailApp.Data.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using StackInternship.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DmailApp.Domain.Enums;
+using DmailApp.Data.Entities.Enums;
+using System.Text.RegularExpressions;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -16,6 +18,9 @@ public class MailRepository : BaseRepository
 
     public ResponseResultType Add(Mail mail)
     {
+        if (mail.Title.Length == 0)
+            return ResponseResultType.ValidationError;
+
         DbContext.Mails.Add(mail);
 
         return SaveChanges();
@@ -50,10 +55,16 @@ public class MailRepository : BaseRepository
             .Include(m => m.Sender)
             .Include(m => m.Recipients)
             .ToList();
-    public ICollection<Mail> GetEmails() => GetAll().ToList();
-    //public ICollection<EventMail> GetEventEmails() => (ICollection<EventMail>)GetAll().ToList();
+    public ICollection<Mail> GetEmails() => GetAll().Where(m=>m.MailType==MailType.MessageMail).ToList();
+    public ICollection<Mail> GetEvents() => GetAll().Where(m=>m.MailType==MailType.EventMail).ToList();
     public ICollection<Mail> GetSender(int id) => GetAll().Where(m => m.SenderId == id).ToList();
-
+    public ICollection<User> GetRecipients(int mailId) => DbContext.Recipients.Where(r => r.MailId == mailId)
+        .Join(DbContext.Users,
+        rm => rm.ReceiverId,
+        u => u.Id,
+        (rm, u) => new { rm, u })
+        .Select(a => a.u)
+        .ToList();
 
     //F-on to get read mail
     //get unread mail

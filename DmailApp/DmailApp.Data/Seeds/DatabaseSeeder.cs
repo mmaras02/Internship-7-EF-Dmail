@@ -18,37 +18,37 @@ public class DatabaseSeeder
                     {
                         Id = 1,
                         Email = "mate.matic@gmail.com",
-                        HashedPassword = PasswordHashed("password",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("password")
                     },
                     new User
                     {
                         Id = 2,
                         Email = "zeljana.zekic@gmail.com",
-                        HashedPassword = PasswordHashed("123movie",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("123movie")
                     },
                     new User
                     {
                         Id = 3,
                         Email = "anitamilic01@dump.com",
-                        HashedPassword = PasswordHashed("london13",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("london13")
                     },
                     new User
                     {
                         Id = 4,
                         Email = "ivo.ivic@gmail.com",
-                        HashedPassword = PasswordHashed("password",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("heloo12")
                     },
                     new User
                     {
                         Id = 5,
                         Email = "marko.caric@dump.com",
-                        HashedPassword = PasswordHashed("password",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("password")
                     },
                     new User
                     {
                         Id = 6,
                         Email = "kate.bulj@gmail.com",
-                        HashedPassword = PasswordHashed("password",GenerateRandomSalt())
+                        HashedPassword = PasswordHashed("password")
                     }
                });
         builder.Entity<Mail>()
@@ -202,30 +202,30 @@ public class DatabaseSeeder
                         MailStatus=MailStatus.Unread
                     }
                 });
-        builder.Entity<Spam>()
-           .HasData(new List<Spam>
+        builder.Entity<SpamFlag>()
+           .HasData(new List<SpamFlag>
                 {
-                    new Spam()
+                    new SpamFlag()
                     {
                         UserId=1,
                         SpamUserId=2
                     },
-                    new Spam()
+                    new SpamFlag()
                     {
                         UserId=1,
                         SpamUserId=4
                     },
-                    new Spam()
+                    new SpamFlag()
                     {
                         UserId=2,
                         SpamUserId=1
                     },
-                    new Spam()
+                    new SpamFlag()
                     {
                         UserId=3,
                         SpamUserId=6
                     },
-                    new Spam()
+                    new SpamFlag()
                     {
                         UserId=4,
                         SpamUserId=1
@@ -233,21 +233,11 @@ public class DatabaseSeeder
 
                 });
     }
-    static private byte[] PasswordHashed(string password, string salt)
+    static private byte[] PasswordHashed(string password)
     {
-        var data = Encoding.UTF8.GetBytes(password + salt);
+        var data = Encoding.UTF8.GetBytes(password);
         var shaM = new SHA512Managed();
         return shaM.ComputeHash(data);
     }
-    private static string GenerateRandomSalt()
-    {
-        int saltSize = 16;
-        byte[] saltBytes = new byte[saltSize];
-        RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-        rng.GetBytes(saltBytes);
-        string salt = Convert.ToBase64String(saltBytes);
-        return salt;
-    }
-
 
 }

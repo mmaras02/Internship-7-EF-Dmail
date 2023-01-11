@@ -1,5 +1,6 @@
-﻿using DmailApp.Data.Entities;
-using StackInternship.Domain.Enums;
+﻿using DmailApp.Domain.Enums;
+using DmailApp.Data.Entities;
+using DmailApp.Domain.Enums;
 
 namespace DmailApp.Domain.Repositories;
 public abstract class BaseRepository
