@@ -7,7 +7,7 @@
 
 //namespace DmailApp.Presentation.Entities.Actions;
 
-//public class SendMailAction:IAction
+//public class SendMailAction : IAction
 //{
 //    public int UserId;
 //    public IAction Action()

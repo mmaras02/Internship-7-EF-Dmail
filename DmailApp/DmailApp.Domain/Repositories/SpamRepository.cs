@@ -15,6 +15,12 @@ public class SpamRepository : BaseRepository
 
     public ResponseResultType Add(SpamFlag spamUser)
     {
+        if (DbContext.Users.Find(spamUser.UserId) is null)
+            return ResponseResultType.NotFound;
+
+        if (DbContext.Users.Find(spamUser.UserId) is null)
+            return ResponseResultType.NotFound;
+
         DbContext.SpamFlag.Add(spamUser);
 
         return SaveChanges();
@@ -31,5 +37,32 @@ public class SpamRepository : BaseRepository
 
         return SaveChanges();
     }
-    //get list of spam users
+
+    public ResponseResultType MarkSpam(int userId,int spamUserId)
+    {
+        DbContext.SpamFlag.Add(new SpamFlag()
+        {
+            UserId = userId,
+            SpamUserId = spamUserId,
+        
+        });
+        return SaveChanges();
+    }
+    public ResponseResultType RemoveSpam(int userId, int spamUserId)
+    {
+        DbContext.SpamFlag.Remove(new SpamFlag()
+        {
+            UserId = userId,
+            SpamUserId = spamUserId,
+
+        });
+        return SaveChanges();
+    }
+    public ICollection<SpamFlag> GetAllSpam(int userId)
+    {
+        var allSpam=DbContext.SpamFlag.ToList()
+            .Where(sf=>sf.UserId== userId).ToList();
+
+        return allSpam;
+    }
 }

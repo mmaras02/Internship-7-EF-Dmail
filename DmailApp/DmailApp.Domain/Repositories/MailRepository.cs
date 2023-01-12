@@ -51,7 +51,6 @@ public class MailRepository : BaseRepository
         return SaveChanges();
     }
     public ICollection<Mail> GetAll() => DbContext.Mails
-            .Include(m => m.Title)
             .Include(m => m.Sender)
             .Include(m => m.Recipients)
             .ToList();
@@ -65,6 +64,25 @@ public class MailRepository : BaseRepository
         (rm, u) => new { rm, u })
         .Select(a => a.u)
         .ToList();
+
+    public ICollection<Mail> GetSpamMail(int userId)
+    {
+        var spamMail = GetAll()
+            .Join(DbContext.Recipients,
+            m => m.MailId,
+            rm => rm.MailId,
+            (m, rm) => new { m, rm })
+            .Where(a => a.rm.ReceiverId == userId)
+            .Select(a => a.m).ToList()
+            .Join(DbContext.SpamFlag,
+            m => m.SenderId,
+            sf => sf.UserId,
+            (m, sf) => new { m, sf })
+            .Select(a => a.m).ToList();
+
+        return spamMail;
+    }
+    
 
     //F-on to get read mail
     //get unread mail

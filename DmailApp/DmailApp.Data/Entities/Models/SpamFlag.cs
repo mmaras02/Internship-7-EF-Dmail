@@ -10,5 +10,4 @@ public class SpamFlag
 
     public int SpamUserId { get; set; }
     public User SpamUser { get; set; }
-
 }

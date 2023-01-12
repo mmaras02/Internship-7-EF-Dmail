@@ -1,13 +1,13 @@
-﻿using DmailApp.Presentation.Entities.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿//using DmailApp.Presentation.Entities.Interfaces;
+//using System;
+//using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
 
 //namespace DmailApp.Presentation.Entities.Actions;
 
-//public class PrimaryMailAction:IAction
+//public class PrimaryMailAction : IAction
 //{
 //    public int UserId;
 //    public IAction Action()

@@ -32,8 +32,6 @@ public class RegistrationAction:IAction
             Console.WriteLine("Wrong input! Passwords do not match!");
             return null;
         }
-
-
         var (userId, status) = userRepository.Add(email, password);
 
         if (status == ResponseResultType.Success)

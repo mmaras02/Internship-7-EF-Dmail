@@ -10,7 +10,7 @@ public class LoginAction:IAction
 {
     public IAction Action ()
     {
-        DateTime loginTime = new DateTime();
+        //DateTime loginTime = new DateTime();
         //var email = "";
         //var password = "";
 
@@ -27,8 +27,8 @@ public class LoginAction:IAction
        
         var userId =userRepository.GetIdByEmail(email);
 
-        if (userRepository.CheckLogin(email, password) == ResponseResultType.Success)
-            return new HomePageAction { UserId = userId };
+        //if (userRepository.CheckLogin(email, password) == ResponseResultType.Success)
+        return new HomePageAction { UserId = userId };
 
         //if(userRepository.CheckLogin(email,password)==ResponseResultType.Error)
         //{
@@ -36,6 +36,6 @@ public class LoginAction:IAction
         //    Thread.Sleep(30000);
         //    Console.ReadLine();
         //}
-        return new HomePageAction { };
+        //return new MainMenuAction { };
     }
 }
