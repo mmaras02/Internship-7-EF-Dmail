@@ -3,6 +3,7 @@ using DmailApp.Data.Entities.Models;
 using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
+using DmailApp.Presentation.Helpers;
 
 namespace DmailApp.Presentation.Helpers;
 
@@ -43,8 +44,9 @@ public static class Printer
         PrintTitle("Home page");
         Console.WriteLine("Actions available\n1.Profile\n2.Primary mail\n3.Sent mail\n4.Spam mail\n5.Send new mail\n6.Send new event\n7.Log out\n'quit'-Exit the app");
     }
-    public static void PrintSpamMail(int userId)
+    public static ResponseResultType PrintSpamMail(int userId)
     {
+        PrintTitle("Spam page");
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
         var userRepository = RepositoryFactory.Create<UserRepository>();
 
@@ -54,8 +56,15 @@ public static class Printer
         foreach (var item in spam)
             spamIds.Add(item.SpamUserId);
 
-        Console.WriteLine("List of users you marked as spam!");
+        if(spamIds.Count is 0 )
+        {
+            ConfirmMessage("you don't have any users marked as spam", ResponseResultType.Error);
+            return ResponseResultType.Error;
+        }
+        Console.WriteLine("List of users you marked as spam:");
         foreach (var item in spamIds)
             Console.WriteLine(userRepository.GetById(item).Email);
+
+        return ResponseResultType.Success;
     }
 }

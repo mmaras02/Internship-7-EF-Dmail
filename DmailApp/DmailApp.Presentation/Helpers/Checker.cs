@@ -51,7 +51,7 @@ public static class Checker
     {
         while(true)
         {
-            Console.WriteLine("Enter input here: ");
+            Console.WriteLine("Your input: ");
             var input=read();
 
             if(valid(input))
@@ -61,7 +61,6 @@ public static class Checker
     }
     public static string CheckEmail(Func<string, bool> valid) => TextInput(valid, Console.ReadLine); 
     public static string PasswordInput(Func<string, bool> valid) => TextInput(valid, ReadPassword);
-
     public static string ReadPassword()
     {
         string password = "";
@@ -90,6 +89,4 @@ public static class Checker
         Console.WriteLine();
         return password;
     }
-    
-
 }
