@@ -23,6 +23,8 @@ public static class Printer
 
         if (messageType == ResponseResultType.Success)
             Console.BackgroundColor = ConsoleColor.Green;
+        if(messageType==ResponseResultType.NoChanges)
+            Console.BackgroundColor = ConsoleColor.Yellow;
 
         Console.WriteLine($"{message}, press any key to continue");
         Console.ReadKey();
@@ -74,27 +76,31 @@ public static class Printer
 
         return ResponseResultType.Success;
     }
-    public static void ReadMail(int userId,List<Mail>readMail)
+    public static void ReadMail(int userId, List<Mail> mail)
     {
         Console.Clear();
         var index = 0;
 
-        foreach (var item in readMail)
+        foreach (var item in mail)
         {
             Console.WriteLine($"{++index}. {item.Title} - {userRepository.GetById(item.SenderId).Email}");
         }
         if (index is 0)
         {
-            ConfirmMessage("You don't have any read mails!", ResponseResultType.Error);
+            ConfirmMessage("You don't have any mails in this container!", ResponseResultType.NoChanges);
             return;
         }
+        ChosenEmail(userId, index, mail);
+    }
+    public static void ChosenEmail(int userId,int index,List<Mail> mail)
+    {
         Console.WriteLine("\nEnter the number of the message you want to enter or enter 0 for returning to main menu");
         Checker.CheckNumber(Console.ReadLine(), out var input);
         if (input is 0)
             return;
 
         if (input > 0 && input <= index)
-            PrintMail(readMail[input - 1].MailId, userId);
+            PrintMail(mail[input - 1].MailId, userId);
 
         else
             ConfirmMessage("Incorrect input! ", ResponseResultType.Error);
@@ -113,7 +119,7 @@ public static class Printer
         }
         else if (mail.MailType is MailType.EventMail)
         {
-            Console.WriteLine($"Title: {mail.Title}\nTime of sending: {mail.TimeOfSending}\nSender: {sender.Email}¸\n\n");
+            Console.WriteLine($"Title: {mail.Title}\nTime of sending: {mail.TimeOfSending}\nSender: {sender.Email}\n");
             Console.WriteLine($"Event start: {mail.EventTime}\nEvent duration: {mail.EventDuration}");
 
             Console.WriteLine("\nList of  other invites");

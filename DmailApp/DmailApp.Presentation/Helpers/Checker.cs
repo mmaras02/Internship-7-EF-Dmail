@@ -93,5 +93,5 @@ public static class Checker
     {
         Console.WriteLine($"\nPress any key to "+ message);
         Console.ReadKey();
-    }
+    } 
 }

@@ -2,13 +2,10 @@
 using DmailApp.Data.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DmailApp.Domain.Enums;
 using DmailApp.Data.Entities.Enums;
 using System.Text.RegularExpressions;
+using DmailApp.Domain.Factories;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -58,15 +55,38 @@ public class MailRepository : BaseRepository
     public ICollection<Mail> GetEvents() => GetAll().Where(m=>m.MailType==MailType.EventMail).ToList();
     public ICollection<Mail> GetSender(int id) => GetAll().Where(m => m.SenderId == id).ToList();
     public Mail? GetById(int id) => DbContext.Mails.FirstOrDefault(m => m.MailId == id);
-    public List<User> GetRecipients(int mailId) => DbContext.Recipients
-        .Where(r => r.MailId == mailId)
-        .Join(DbContext.Users,
-        rm => rm.ReceiverId,
-        u => u.Id,
-        (rm, u) => new { rm, u })
-        .Select(a => a.u)
-        .ToList();
+    //public List<User> GetRecipients(int mailId) => DbContext.Recipients
+    //    .Where(r => r.MailId == mailId)
+    //    .Join(DbContext.Users,
+    //    rm => rm.ReceiverId,
+    //    u => u.Id,
+    //    (rm, u) => new { rm, u })
+    //    .Select(a => a.u)
+    //    .ToList();
+    public ICollection<User> GetRecipients(int mailId)
+    {
+        //var recipient = DbContext.Recipients
+        //    .Where(r => r.MailId == mailId)
+        //    .Join(DbContext.Users,
+        //        rm => rm.ReceiverId,
+        //        u => u.Id,
+        //        (rm, u) => new { rm, u })
+        //    .Select(a => a.u)
+        //    .ToList();
+        var recipient = DbContext.Recipients
+            .Where(rm => rm.MailId == mailId)
+            .ToList();
 
+        List<User> receivers = new List<User>();
+        var userRepository = RepositoryFactory.Create<UserRepository>();
+
+        foreach (var user in recipient)
+        {
+            receivers.Add(userRepository.GetById(user.ReceiverId));
+        }
+       
+        return receivers;
+    }
     public ICollection<Mail> GetSpamMail(int userId)
     {
         var spamMail = GetAll()
@@ -124,7 +144,13 @@ public class MailRepository : BaseRepository
         mailToUpdate.MailStatus = MailStatus.Unread;
         return SaveChanges();
     }
+    public ICollection<Mail>GetSentMail(int userId)
+    {
+        var sent=DbContext.Mails
+            .Where(m=>m.SenderId==userId).ToList();
 
+        return sent;
+    }
 
     //search spam
     //get sent mail

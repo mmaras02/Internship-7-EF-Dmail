@@ -12,7 +12,6 @@ public class PrimaryMailAction : IAction
     public int UserId;
     public IAction Action()
     {
-        //1-read 2-unread 3.search
         Printer.PrintInbox();
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository=RepositoryFactory.Create<MailRepository>();

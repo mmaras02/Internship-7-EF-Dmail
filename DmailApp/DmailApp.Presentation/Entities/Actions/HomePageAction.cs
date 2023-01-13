@@ -24,9 +24,9 @@ public class HomePageAction:IAction
         {
             case 1:
                 return new PrimaryMailAction { UserId = UserId };
-      
-            //case 2:
-            //    return new OutgoingMailAction { UserId = UserId };
+
+            case 2:
+                return new OutgoingMailAction { UserId = UserId };
 
             case 3:
                 return new SpamMailAction { UserId = UserId };
@@ -43,6 +43,7 @@ public class HomePageAction:IAction
             case 7:
                 return new LogOutAction { UserId = UserId };
         }
-        return new HomePageAction { };
+        return null;
+        //return new HomePageAction { };
     }
 }

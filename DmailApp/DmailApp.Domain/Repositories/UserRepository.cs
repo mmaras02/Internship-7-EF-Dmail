@@ -100,6 +100,13 @@ public class UserRepository : BaseRepository
         .Select(a=>a.u)
         .ToList();
 
+ 
+    //public string GetRecipients(int mailId)
+    //{
+    //    var recipients = DbContext.Recipients
+    //        .Where(rm => rm.MailId == mailId).ToList();
+
+    //}
 
     //check combination of username/password
 }
