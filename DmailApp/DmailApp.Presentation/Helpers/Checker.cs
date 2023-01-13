@@ -12,18 +12,17 @@ public static class Checker
     {
         while(true)
         {
-            Console.WriteLine("Enter your input: ");
+            Console.WriteLine("Your input: ");
             var input = Console.ReadLine();
 
-            if (input == "exit")
+            if (input =="exit")
                 return null;
 
             var inputSuccess = int.TryParse(input, out int value);
 
             if (inputSuccess && value <= maxNumber)
                 return value;
-
-            Console.WriteLine("Invalid input! Try again!");
+            //Console.WriteLine("Invalid input! Try again!");
         }
     }
     public static bool CheckString(string suspectString, out string result)
@@ -36,7 +35,7 @@ public static class Checker
         result = suspectString;
         return true;
     }
-    public static bool CheckForNumber(string suspectString, out int number)
+    public static bool CheckNumber(string suspectString, out int number)
     {
         if (int.TryParse(suspectString, out int result))
         {
@@ -56,8 +55,9 @@ public static class Checker
 
             if(valid(input))
                 return input;
+
+            Console.WriteLine("wrong input! Try again");
         }
-        Console.WriteLine("wrong input! Try again");
     }
     public static string CheckEmail(Func<string, bool> valid) => TextInput(valid, Console.ReadLine); 
     public static string PasswordInput(Func<string, bool> valid) => TextInput(valid, ReadPassword);
@@ -88,5 +88,10 @@ public static class Checker
 
         Console.WriteLine();
         return password;
+    }
+    public static void UserInput(string message)
+    {
+        Console.WriteLine($"\nPress any key to "+ message);
+        Console.ReadKey();
     }
 }

@@ -157,37 +157,44 @@ public class DatabaseSeeder
                     {
                         MailId=6,
                         ReceiverId=1,
-                        EventStatus=EventStatus.Rejected
+                        EventStatus=EventStatus.Rejected,
+                        MailStatus=MailStatus.Read
                     },
                     new ReceiverMail()
                     {
                         MailId=7,
                         ReceiverId=3,
-                        EventStatus=EventStatus.NoResponse
+                        EventStatus=EventStatus.NoResponse,
+                        MailStatus=MailStatus.Unread
+
                     },
                     new ReceiverMail()
                     {
                         MailId=8,
                         ReceiverId=6,
-                        EventStatus=EventStatus.Accepted
+                        EventStatus=EventStatus.Accepted,
+                        MailStatus=MailStatus.Read
                     },
                     new ReceiverMail()
                     {
                         MailId=8,
                         ReceiverId=2,
-                        EventStatus=EventStatus.Accepted
+                        EventStatus=EventStatus.Accepted,
+                        MailStatus=MailStatus.Read
                     },
                     new ReceiverMail()
                     {
                         MailId=9,
                         ReceiverId=2,
-                        EventStatus=EventStatus.Accepted
+                        EventStatus=EventStatus.Accepted,
+                        MailStatus=MailStatus.Read
                     },
                     new ReceiverMail()
                     {
                         MailId=9,
                         ReceiverId=1,
-                        EventStatus=EventStatus.NoResponse
+                        EventStatus=EventStatus.NoResponse,
+                        MailStatus=MailStatus.Unread
                     },
                     new ReceiverMail()
                     {

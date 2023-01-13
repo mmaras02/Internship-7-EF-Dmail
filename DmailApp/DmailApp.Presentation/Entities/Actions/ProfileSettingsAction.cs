@@ -9,7 +9,7 @@
 
 //namespace DmailApp.Presentation.Entities.Actions;
 
-//public class UserProfileAction : IAction
+//public class ProfileSettingsAction : IAction
 //{
 //    public int UserId;
 //    public IAction Action()

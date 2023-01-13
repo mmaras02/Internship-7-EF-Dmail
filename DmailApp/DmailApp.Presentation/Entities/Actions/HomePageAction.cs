@@ -1,4 +1,5 @@
-﻿using DmailApp.Domain.Factories;
+﻿using DmailApp.Domain.Enums;
+using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
 using DmailApp.Presentation.Helpers;
@@ -21,23 +22,23 @@ public class HomePageAction:IAction
 
         switch (Checker.NumberInput(7))
         {
-            //case 1:
-            //    return new UserProfileAction { UserId = UserId };
-
+            case 1:
+                return new PrimaryMailAction { UserId = UserId };
+      
             //case 2:
-            //    return new PrimaryMailAction { UserId = UserId };
+            //    return new OutgoingMailAction { UserId = UserId };
 
-            //case 3:
-            //    return new SendMailAction { UserId = UserId };
-
-            case 4:
+            case 3:
                 return new SpamMailAction { UserId = UserId };
 
-            //case 5:
+            //case 4:
             //    return new SendMailAction { UserId = UserId };
 
+            //case 5:
+            //    return new SendEventAction { UserId = UserId };    
+
             //case 6:
-            //    return new SendEventAction { UserId = UserId };
+            //    return new ProfileSettingsAction { UserId = UserId };
 
             case 7:
                 return new LogOutAction { UserId = UserId };

@@ -12,7 +12,7 @@ public class MainMenuAction : IAction
         Printer.PrintTitle("Welcome to DmailApp");
         Printer.PrintMainMenu();
 
-        switch(Checker.NumberInput(2))
+        switch (Checker.NumberInput(2))
         {
             case 1:
                 return new LoginAction { };

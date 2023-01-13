@@ -52,6 +52,7 @@ public class UserRepository : BaseRepository
     {
         if (!Regex.IsMatch(email, "^([a-z A-Z 0-9 .]{1,})+@([a-z A-Z 0-9]{3,})+.+[a-z A-z]{2,}$"))
             return ResponseResultType.ValidationError;
+
         return ResponseResultType.Success;
     }
     public bool DoesEmailExists(string email) =>
