@@ -23,6 +23,7 @@ public static class Printer
 
         if (messageType == ResponseResultType.Success)
             Console.BackgroundColor = ConsoleColor.Green;
+
         if(messageType==ResponseResultType.NoChanges)
             Console.BackgroundColor = ConsoleColor.Yellow;
 

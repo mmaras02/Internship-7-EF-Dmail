@@ -31,8 +31,8 @@ public class HomePageAction:IAction
             case 3:
                 return new SpamMailAction { UserId = UserId };
 
-            //case 4:
-            //    return new SendMailAction { UserId = UserId };
+            case 4:
+                return new SendMailAction { UserId = UserId };
 
             //case 5:
             //    return new SendEventAction { UserId = UserId };    

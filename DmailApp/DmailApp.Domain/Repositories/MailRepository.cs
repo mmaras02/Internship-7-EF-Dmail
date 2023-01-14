@@ -6,6 +6,8 @@ using DmailApp.Domain.Enums;
 using DmailApp.Data.Entities.Enums;
 using System.Text.RegularExpressions;
 using DmailApp.Domain.Factories;
+using System.Drawing.Printing;
+using System.Collections;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -150,6 +152,13 @@ public class MailRepository : BaseRepository
             .Where(m=>m.SenderId==userId).ToList();
 
         return sent;
+    }
+    public int GetFreeId()
+    {
+        var userIds = DbContext.Mails
+            .Select(m => m.MailId)
+            .ToList();
+        return userIds.Last() + 1;
     }
 
     //search spam

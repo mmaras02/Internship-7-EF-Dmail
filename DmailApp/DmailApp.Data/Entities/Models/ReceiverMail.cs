@@ -12,5 +12,6 @@ public class ReceiverMail
 
     public MailStatus? MailStatus { get; set; } = null!;
     public EventStatus? EventStatus { get; set; } = null!;
+
 }
 

@@ -46,7 +46,7 @@ public static class Checker
         number = 0;
         return false;
     }
-    private static string TextInput(Func<string, bool> valid,Func<string>read)
+    public static string TextInput(Func<string, bool> valid,Func<string>read)
     {
         while(true)
         {
