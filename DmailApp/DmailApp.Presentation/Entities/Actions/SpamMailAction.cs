@@ -48,6 +48,5 @@ public class SpamMailAction : IAction
         }
       
         return new HomePageAction{UserId=UserId };
-
     }
 }

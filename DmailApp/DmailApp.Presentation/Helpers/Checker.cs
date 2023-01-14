@@ -8,15 +8,15 @@ namespace DmailApp.Presentation.Helpers;
 
 public static class Checker
 {
-    public static int? NumberInput(int maxNumber)
+    public static int NumberInput(int maxNumber)
     {
         while(true)
         {
             Console.WriteLine("Your input: ");
             var input = Console.ReadLine();
 
-            if (input =="exit")
-                return null;
+            //if (input =="exit")
+            //    return null;
 
             var inputSuccess = int.TryParse(input, out int value);
 

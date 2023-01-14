@@ -5,6 +5,7 @@ using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Actions;
 using DmailApp.Presentation.Helpers;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DmailApp.Presentation.Helpers;
 
@@ -113,7 +114,7 @@ public static class Printer
         mailRepository.ChangeToRead(mail);
         var sender = userRepository.GetById(mail.SenderId);
 
-        if(mail.MailType is MailType.MessageMail)
+        if (mail.MailType is MailType.MessageMail)
         {
             Console.WriteLine($"Title: {mail.Title}\nTime of sending: {mail.TimeOfSending}\nSender: {sender.Email}\n");
             Console.WriteLine($"{mail.Content}\n");
@@ -124,13 +125,23 @@ public static class Printer
             Console.WriteLine($"Event start: {mail.EventTime}\nEvent duration: {mail.EventDuration}");
 
             Console.WriteLine("\nList of  other invites");
-            var recipients=mailRepository.GetRecipients(mail.MailId);
+            var recipients = mailRepository.GetRecipients(mail.MailId);
 
-            foreach ( var recipient in recipients)
+            foreach (var recipient in recipients)
             {
                 Console.WriteLine($"{recipient.Email}");
             }
         }
-
     }
+    public static void PrintUsers(List<int>userIds,List<int>markedSpam) 
+    {
+        var index = 0;
+        foreach (var item in userIds)
+        {
+            if (markedSpam.Contains(item))
+                Console.WriteLine($"{++index}.{userRepository.GetById(item).Email} (marked as spam)");
+            else
+                Console.WriteLine($"{++index}.{userRepository.GetById(item).Email}");
+            }
+        }
 }

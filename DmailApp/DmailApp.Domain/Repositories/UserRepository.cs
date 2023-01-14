@@ -91,22 +91,21 @@ public class UserRepository : BaseRepository
         var shaM = new SHA512Managed();
         return shaM.ComputeHash(data);
     }
-    public ICollection<User>GetSpamUsers(int userId)=>DbContext.SpamFlag
-        .Where(sf=>sf.UserId== userId)
-        .Join(DbContext.Users,
-        sf=>sf.SpamUserId,
-        u=>u.Id,
-        (sf, u) => new {sf,u})
-        .Select(a=>a.u)
-        .ToList();
-
- 
-    //public string GetRecipients(int mailId)
-    //{
-    //    var recipients = DbContext.Recipients
-    //        .Where(rm => rm.MailId == mailId).ToList();
-
-    //}
-
-    //check combination of username/password
+    public List<int> GetSendersByReceiver(int userId)
+    {
+        var senderIds = DbContext.Recipients
+            .Where(rm => rm.ReceiverId == userId)
+            .Select(rm => rm.Mail.SenderId)
+            .ToList();
+    
+        return senderIds;
+    }
+    public List<int> GetRecipientsBySender(int userId)
+    {
+        var recipientIds = DbContext.Recipients
+            .Where(rm => rm.Mail.SenderId == userId)
+            .Select(rm => rm.ReceiverId)
+            .ToList();
+        return recipientIds;
+    }
 }

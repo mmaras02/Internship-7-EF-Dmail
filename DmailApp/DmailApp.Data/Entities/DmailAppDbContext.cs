@@ -75,6 +75,7 @@ public class DmailAppDbContextFactory : IDesignTimeDbContextFactory<DmailAppDbCo
             .UseNpgsql(connectionString)
             .Options;
 
+
         return new DmailAppDbContext(options);
     }
 }

@@ -18,7 +18,7 @@ public class SpamRepository : BaseRepository
         if (DbContext.Users.Find(spamUser.UserId) is null)
             return ResponseResultType.NotFound;
 
-        if (DbContext.Users.Find(spamUser.UserId) is null)
+        if (DbContext.Users.Find(spamUser.SpamUserId) is null)
             return ResponseResultType.NotFound;
 
         DbContext.SpamFlag.Add(spamUser);
@@ -50,19 +50,28 @@ public class SpamRepository : BaseRepository
     }
     public ResponseResultType RemoveSpam(int userId, int spamUserId)
     {
-        DbContext.SpamFlag.Remove(new SpamFlag()
-        {
-            UserId = userId,
-            SpamUserId = spamUserId,
+        var adressToRemove = DbContext.SpamFlag
+                .Where(sf => sf.UserId == userId)
+                .Where(sf => sf.SpamUserId == spamUserId)
+                .ToList();
 
-        });
+        DbContext.SpamFlag.Remove(adressToRemove[0]);
         return SaveChanges();
     }
-    public ICollection<SpamFlag> GetAllSpam(int userId)
+    public List<SpamFlag> GetAllSpam(int userId)
     {
-        var allSpam=DbContext.SpamFlag.ToList()
-            .Where(sf=>sf.UserId== userId).ToList();
+        var allSpam = DbContext.SpamFlag
+            .Where(sf => sf.UserId == userId)
+            .ToList();
 
         return allSpam;
+    }
+    public List<int> GetSpamIdsList(int userId)
+    {
+        List<int> spamList = new List<int>();
+        var spam = GetAllSpam(userId);
+        foreach (var item in spam)
+            spamList.Add(item.SpamUserId);
+        return spamList;
     }
 }
