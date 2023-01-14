@@ -34,8 +34,8 @@ public class HomePageAction:IAction
             case 4:
                 return new SendMailAction { UserId = UserId };
 
-            //case 5:
-            //    return new SendEventAction { UserId = UserId };    
+            case 5:
+                return new SendEventAction { UserId = UserId };
 
             //case 6:
             //    return new ProfileSettingsAction { UserId = UserId };

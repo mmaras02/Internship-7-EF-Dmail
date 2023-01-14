@@ -10,12 +10,14 @@ namespace DmailApp.Data.Entities;
 public class DmailAppDbContext : DbContext
 {
     public DmailAppDbContext(DbContextOptions options) : base(options) { }
-
     public DbSet<User> Users => Set<User>();
     public DbSet<Mail> Mails => Set<Mail>();
     public DbSet<SpamFlag> SpamFlag => Set<SpamFlag>();
     public DbSet<ReceiverMail> Recipients => Set<ReceiverMail>();
-
+    static DmailAppDbContext()
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Mail>()
