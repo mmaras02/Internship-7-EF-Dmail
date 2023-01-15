@@ -17,8 +17,12 @@ public class RegistrationAction:IAction
 
         Console.WriteLine("Enter your email: ");
         var email = Checker.CheckEmail(input => !userRepository.DoesEmailExists((string)input));
+
         if (userRepository.ValidateEmail(email) == ResponseResultType.ValidationError)
-            return null;
+        {
+            PrintMessage("User with same email already exists!", ResponseResultType.Warning);
+            return new MainMenuAction { };
+        }
 
         Console.WriteLine("Enter password: ");
         var password = Checker.PasswordInput(input=>true);
@@ -29,7 +33,7 @@ public class RegistrationAction:IAction
         if (password != confirmPassword)
         {
             Console.WriteLine("Wrong input! Passwords do not match!");
-            return null;
+            return new MainMenuAction { };
         }
         var (userId, status) = userRepository.Add(email, password);
 

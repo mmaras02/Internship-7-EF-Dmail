@@ -30,7 +30,7 @@ public class OutgoingMailAction : IAction
         if (index == 0)
             PrintMessage("You didn't send any messages ",ResponseResultType.NoChanges);
 
-        ChooseEmail(UserId, index, outgoing);
+        FilterMail(UserId, index, outgoing,false);
 
         UserInput("to go back to menu");
         return  new HomePageAction { UserId= UserId };  

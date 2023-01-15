@@ -57,24 +57,9 @@ public class MailRepository : BaseRepository
     public ICollection<Mail> GetEvents() => GetAll().Where(m=>m.MailType==MailType.EventMail).ToList();
     public ICollection<Mail> GetSender(int id) => GetAll().Where(m => m.SenderId == id).ToList();
     public Mail? GetById(int id) => DbContext.Mails.FirstOrDefault(m => m.MailId == id);
-    //public List<User> GetRecipients(int mailId) => DbContext.Recipients
-    //    .Where(r => r.MailId == mailId)
-    //    .Join(DbContext.Users,
-    //    rm => rm.ReceiverId,
-    //    u => u.Id,
-    //    (rm, u) => new { rm, u })
-    //    .Select(a => a.u)
-    //    .ToList();
+   
     public ICollection<User> GetRecipients(int mailId)
-    {
-        //var recipient = DbContext.Recipients
-        //    .Where(r => r.MailId == mailId)
-        //    .Join(DbContext.Users,
-        //        rm => rm.ReceiverId,
-        //        u => u.Id,
-        //        (rm, u) => new { rm, u })
-        //    .Select(a => a.u)
-        //    .ToList();
+    { 
         var recipient = DbContext.Recipients
             .Where(rm => rm.MailId == mailId)
             .ToList();
@@ -93,15 +78,15 @@ public class MailRepository : BaseRepository
     {
         var spamMail = GetAll()
             .Join(DbContext.Recipients,
-            m => m.MailId,
-            rm => rm.MailId,
-            (m, rm) => new { m, rm })
+                m => m.MailId,
+                rm => rm.MailId,
+                (m, rm) => new { m, rm })
             .Where(a => a.rm.ReceiverId == userId)
             .Select(a => a.m).ToList()
             .Join(DbContext.SpamFlag,
-            m => m.SenderId,
-            sf => sf.UserId,
-            (m, sf) => new { m, sf })
+                m => m.SenderId,
+                sf => sf.UserId,
+                (m, sf) => new { m, sf })
             .Select(a => a.m).ToList();
 
         return spamMail;

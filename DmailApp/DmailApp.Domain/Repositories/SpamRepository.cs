@@ -37,9 +37,15 @@ public class SpamRepository : BaseRepository
 
         return SaveChanges();
     }
+    public ICollection<SpamFlag>GetAll()=>DbContext.SpamFlag.ToList();
+    public bool DoesSpamPairExist(int userId, int spamId)=> GetAll().Any(sf => sf.UserId == userId && sf.SpamUserId == spamId);
 
     public ResponseResultType MarkSpam(int userId,int spamUserId)
     {
+      
+        if(DoesSpamPairExist(userId, spamUserId))
+            return ResponseResultType.NoChanges;
+
         DbContext.SpamFlag.Add(new SpamFlag()
         {
             UserId = userId,

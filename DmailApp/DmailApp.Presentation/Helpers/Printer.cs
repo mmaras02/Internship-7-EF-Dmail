@@ -60,6 +60,11 @@ public static class Printer
         PrintTitle("Inbox Mail");
         Console.WriteLine("\n1.Read mail\n2.Unread mail\n3.Search mail from user\n0.Back to main menu\n");
     }
+    public static void PrintOptions()
+    {
+        Console.WriteLine("\nYour options for choosen mail:");
+        Console.WriteLine("1.Mark as unread\n2.Mark as spam\n3.Delete mail\n4.Replay to mail\n0.Go back to primary mail");
+    }
     public static ResponseResultType PrintSpamMail(int userId)
     {
         PrintTitle("Spam page");
@@ -79,13 +84,17 @@ public static class Printer
         foreach (var item in spamIds)
             Console.WriteLine(userRepository.GetById(item).Email);
 
+        Console.WriteLine("\nAvailable options are:");
+        Console.WriteLine($"1.Mark new spam user\n2.Remove spam user\n0.back to home page\n");
+
         return ResponseResultType.Success;
     }
-    public static void ReadMail(int userId, List<Mail> mail)
+    public static void ReadMail(int userId, List<Mail> mail,bool inbox)
     {
         Console.Clear();
         var index = 0;
 
+        Console.WriteLine("\tTitle\t\tSender");
         foreach (var item in mail)
         {
             Console.WriteLine($"{++index}. {item.Title} - {userRepository.GetById(item.SenderId).Email}");
@@ -95,21 +104,60 @@ public static class Printer
             PrintMessage("You don't have any mails in this container!", ResponseResultType.NoChanges);
             return;
         }
-        ChooseEmail(userId, index, mail);
+        FilterMail(userId, index, mail,inbox);
     }
-    public static void ChooseEmail(int userId,int index,List<Mail> mail)
+    public static void FilterMail(int userId,int index,List<Mail> mail,bool inbox)
     {
-        Console.WriteLine("\nEnter the number of the message you want to enter or enter 0 for returning to main menu");
+        Console.WriteLine("\nNumber of the mail you want to filter\n0.Go back to main");
         int.TryParse(Console.ReadLine(), out int input);
 
         if (input is 0)
             return;
 
-        if (input > 0 && input <= index)
-            PrintMail(mail[input - 1].MailId, userId);
-
-        else
+        if (input < 0 && input >= index)
             PrintMessage("Incorrect input! ", ResponseResultType.Error);
+
+        PrintMail(mail[input - 1].MailId, userId);
+        var message = mailRepository.GetById(mail[input - 1].MailId);
+
+        if (!inbox)
+        {
+            GetOutboxActions(message.MailId);
+        }
+        else
+            GetInboxActions(message,userId);
+    }
+    public static void GetOutboxActions(int mailId)
+    {
+        if (!GetConfirmation("delete this mail? "))
+            return;
+
+        mailRepository.Delete(mailId);
+    }
+    public static void GetInboxActions(Mail mail,int userId)
+    {
+        PrintOptions();
+        switch(NumberInput(maxNumber:4))
+        {
+            case 1:
+                mailRepository.ChangeToUnread(mail);
+                PrintMessage("You changed mail to unread! ",ResponseResultType.Success);
+                return;
+            case 2:
+                if (spamRepository.MarkSpam(userId, mail.SenderId) == ResponseResultType.NoChanges)
+                    PrintMessage("User already marked as spam!", ResponseResultType.NoChanges);
+                else
+                    PrintMessage("Sucessfully marked spam! ", ResponseResultType.Success);
+                return;
+            case 3:
+                mailRepository.Delete(mail.MailId);
+                PrintMessage("You deleted choosen mail! ", ResponseResultType.Success);
+                return;
+            case 4:
+                return;
+            default:
+                return;
+        }
     }
     public static void PrintMail(int mailId, int userId)
     {

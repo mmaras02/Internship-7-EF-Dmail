@@ -85,11 +85,11 @@ public static class Checker
         Console.WriteLine($"\nPress any key "+ message);
         Console.ReadKey();
     }
-    public static bool GetConfirmation()
+    public static bool GetConfirmation(string message)
     {
         while (true)
         {
-            Console.Write("Are you sure you want to take this action?" + "(y/n): ");
+            Console.Write("Are you sure you want to "+ message + "(y/n): ");
             string input = Console.ReadLine().Trim().ToLower();
 
             if (input == "y" || input == "yes") return true;

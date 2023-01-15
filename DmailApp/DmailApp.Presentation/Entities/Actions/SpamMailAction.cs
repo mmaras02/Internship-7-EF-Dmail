@@ -13,15 +13,11 @@ public class SpamMailAction : IAction
     public int UserId;
     public IAction Action()
     {
-        Console.Clear();
-
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
         var userRepository= RepositoryFactory.Create<UserRepository>();
 
         if (PrintSpamMail(UserId) == ResponseResultType.Error)
             return new HomePageAction { UserId=UserId};
-
-        Console.WriteLine($"\n\n1.Mark new spam user\n2.Remove spam user\n'exit'-exit\n");
 
         switch(NumberInput(maxNumber:2))
         {
@@ -29,8 +25,11 @@ public class SpamMailAction : IAction
                 Console.WriteLine("Enter email you want to mark as spam: ");
                 var email = Checker.CheckEmail(input => userRepository.DoesEmailExists(input));
 
-                spamRepository.MarkSpam(UserId, userRepository.GetByEmail(email).Id);
-                PrintMessage("Sucessfully added spam user", ResponseResultType.Success);
+                if(GetConfirmation("take this action?"))
+                {
+                    spamRepository.MarkSpam(UserId, userRepository.GetByEmail(email).Id);
+                    PrintMessage("Sucessfully added spam user", ResponseResultType.Success);
+                }
 
                 return new SpamMailAction{UserId=UserId };
             case 2:
@@ -39,11 +38,12 @@ public class SpamMailAction : IAction
 
                 spamRepository.RemoveSpam(UserId, userRepository.GetByEmail(email1).Id);
                 PrintMessage("Sucessfully removed spam", ResponseResultType.Success);
-
                 return new SpamMailAction { UserId = UserId };
+            case 0:
+                return new HomePageAction { UserId = UserId };
 
             default:
-                PrintMessage("Wrong input", ResponseResultType.Error);
+                //PrintMessage("Wrong input", ResponseResultType.Error);
                 break;
         }
         return new HomePageAction { UserId = UserId };

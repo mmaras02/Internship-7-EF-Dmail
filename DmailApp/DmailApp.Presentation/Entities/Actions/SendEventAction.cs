@@ -33,7 +33,7 @@ public class SendEventAction : IAction
 
         if (!validDate || dateInput < DateTime.Now)
         {
-            Printer.PrintMessage("Incorrect date input! Try again", ResponseResultType.Error);
+            PrintMessage("Incorrect date input! Try again", ResponseResultType.Error);
             return null;
         }
         Mail newMail = new(title)
@@ -49,11 +49,9 @@ public class SendEventAction : IAction
         mailRepository.Add(newMail);
 
         Console.WriteLine("Enter receivers emails (separate with <, >):");
-        var receivers = Console.ReadLine();
+        string[] emails = Console.ReadLine().Split(", ");
 
-        string[] emails = receivers.Split(", ");
-
-        if (!GetConfirmation())
+        if (!GetConfirmation("send this event? " ))
         {
             PrintMessage("Sending stopped", ResponseResultType.Warning);
             return new HomePageAction { UserId = UserId };

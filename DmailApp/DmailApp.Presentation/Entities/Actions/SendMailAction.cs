@@ -44,7 +44,7 @@ public class SendMailAction : IAction
         Console.WriteLine("Enter receivers emails (separate with <, >):");
         string[] emails = Console.ReadLine().Split(", ");
 
-        if (!GetConfirmation())
+        if (!GetConfirmation("send this mail? "))
         {
             PrintMessage("Sending stopped", ResponseResultType.NoChanges);
             return new HomePageAction { UserId= UserId };

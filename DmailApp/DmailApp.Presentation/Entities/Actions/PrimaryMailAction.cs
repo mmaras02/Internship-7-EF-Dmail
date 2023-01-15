@@ -20,14 +20,12 @@ public class PrimaryMailAction : IAction
         {
             case 1:
                 var readMail = mailRepository.GetReadMail(UserId);
-                ReadMail(UserId,readMail);
-                UserInput("go back to primary mail");
+                ReadMail(UserId,readMail,true);
 
                 return new PrimaryMailAction { UserId = UserId }; 
             case 2:
                 var readMails = mailRepository.GetUnreadMail(UserId);
-                ReadMail(UserId, readMails);
-                UserInput("go back to primary mail");
+                ReadMail(UserId, readMails,true);
 
                 return new PrimaryMailAction { UserId = UserId };
             case 3:
