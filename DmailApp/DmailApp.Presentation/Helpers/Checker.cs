@@ -1,4 +1,5 @@
 ﻿using DmailApp.Data.Entities.Models;
+using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,15 @@ public static class Checker
             Console.WriteLine("Your input: ");
             var input = Console.ReadLine();
 
-            //if (input =="exit")
-            //    return null;
+            if (input == "exit")
+                return 0;
 
             var inputSuccess = int.TryParse(input, out int value);
 
             if (inputSuccess && value <= maxNumber)
                 return value;
-            //Console.WriteLine("Invalid input! Try again!");
+
+            Console.WriteLine("Invalid input! Try again!");
         }
     }
     public static bool CheckString(string suspectString, out string result)
@@ -35,17 +37,6 @@ public static class Checker
         result = suspectString;
         return true;
     }
-    public static bool CheckNumber(string suspectString, out int number)
-    {
-        if (int.TryParse(suspectString, out int result))
-        {
-            number = result;
-            return true;
-        }
-
-        number = 0;
-        return false;
-    }
     public static string TextInput(Func<string, bool> valid,Func<string>read)
     {
         while(true)
@@ -56,7 +47,7 @@ public static class Checker
             if(valid(input))
                 return input;
 
-            Console.WriteLine("wrong input! Try again");
+            PrintMessage("wrong input! Try again! ",ResponseResultType.Error);
         }
     }
     public static string CheckEmail(Func<string, bool> valid) => TextInput(valid, Console.ReadLine); 
@@ -91,7 +82,21 @@ public static class Checker
     }
     public static void UserInput(string message)
     {
-        Console.WriteLine($"\nPress any key to "+ message);
+        Console.WriteLine($"\nPress any key "+ message);
         Console.ReadKey();
-    } 
+    }
+    public static bool GetConfirmation()
+    {
+        while (true)
+        {
+            Console.Write("Are you sure you want to take this action?" + "(y/n): ");
+            string input = Console.ReadLine().Trim().ToLower();
+
+            if (input == "y" || input == "yes") return true;
+            if (input == "n" || input == "no") return false;
+
+            PrintMessage("Invalid input! ", ResponseResultType.Error);
+            UserInput("for return to main page");
+        }
+    }
 }

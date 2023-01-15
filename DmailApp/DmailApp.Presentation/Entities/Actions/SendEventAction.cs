@@ -14,17 +14,17 @@ namespace DmailApp.Presentation.Entities.Actions;
 public class SendEventAction : IAction
 {
     public int UserId;
+
     public IAction Action()
     {
         Printer.PrintTitle("New event");
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
-        var input = "";
 
         Console.WriteLine("Enter title: ");
         var validTitle = Checker.CheckString(Console.ReadLine(), out string title);
-
+        
         Console.WriteLine("Enter event date start (yyyy-MM-dd HH:mm:ss): ");
         var validDate = DateTime.TryParse(Console.ReadLine(), out DateTime dateInput);
 
@@ -33,7 +33,7 @@ public class SendEventAction : IAction
 
         if (!validDate || dateInput < DateTime.Now)
         {
-            Printer.ConfirmMessage("Incorrect date input! Try again", ResponseResultType.Error);
+            Printer.PrintMessage("Incorrect date input! Try again", ResponseResultType.Error);
             return null;
         }
         Mail newMail = new(title)
@@ -53,18 +53,15 @@ public class SendEventAction : IAction
 
         string[] emails = receivers.Split(", ");
 
-        Console.WriteLine("Enter <y> to confirm sending this mail");
-        input = Console.ReadLine();
-
-        if (input != "y")
+        if (!GetConfirmation())
         {
-            Printer.ConfirmMessage("Sending stopped", ResponseResultType.NoChanges);
+            PrintMessage("Sending stopped", ResponseResultType.Warning);
             return new HomePageAction { UserId = UserId };
         }
         foreach (var item in emails)
         {
             if (!userRepository.DoesEmailExists(item))
-                Printer.ConfirmMessage($"{item} doesn't exist! ", ResponseResultType.Error);
+                PrintMessage($"{item} doesn't exist! ", ResponseResultType.Warning);
 
             ReceiverMail newReceiverMail = new()
             {
@@ -75,7 +72,7 @@ public class SendEventAction : IAction
             };
             receiverMailRepository.Add(newReceiverMail);
         }
-        Printer.ConfirmMessage("Event invitation sent successfuly!", ResponseResultType.Success);
+        PrintMessage("Event invitation sent successfuly!", ResponseResultType.Success);
         return new HomePageAction { UserId = UserId };
     }
 }

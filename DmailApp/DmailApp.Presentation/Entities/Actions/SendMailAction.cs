@@ -20,7 +20,6 @@ public class SendMailAction : IAction
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
-        var input="";
 
         Console.WriteLine("Enter title: ");
         var validTitle = Checker.CheckString(Console.ReadLine(), out string title);
@@ -29,7 +28,7 @@ public class SendMailAction : IAction
         var validContent=Checker.CheckString(Console.ReadLine(), out string content);
 
         if (!validContent || !validContent)
-            Printer.ConfirmMessage("Wrong input! Can't be empty field", ResponseResultType.Error);
+            PrintMessage("Wrong input! Can't be empty field", ResponseResultType.Error);
 
         Mail newMail = new(title)
         {
@@ -43,23 +42,18 @@ public class SendMailAction : IAction
         mailRepository.Add(newMail);
 
         Console.WriteLine("Enter receivers emails (separate with <, >):");
-        var receivers = Console.ReadLine();
+        string[] emails = Console.ReadLine().Split(", ");
 
-        string[] emails = receivers.Split(", ");
-
-        Console.WriteLine("Enter <y> to confirm sending this mail");
-        input=Console.ReadLine();
-
-        if (input != "y")
+        if (!GetConfirmation())
         {
-            Printer.ConfirmMessage("Sending stopped", ResponseResultType.NoChanges);
+            PrintMessage("Sending stopped", ResponseResultType.NoChanges);
             return new HomePageAction { UserId= UserId };
         }
 
         foreach(var item in emails)
         {
             if (!userRepository.DoesEmailExists(item))
-                Printer.ConfirmMessage($"{item} doesn't exist! ", ResponseResultType.Error);
+                PrintMessage($"{item} doesn't exist! ", ResponseResultType.Warning);
             
             ReceiverMail newReceiverMail = new()
             {
@@ -69,7 +63,7 @@ public class SendMailAction : IAction
             };
             receiverMailRepository.Add(newReceiverMail);
         }
-        Printer.ConfirmMessage("Message sent successfuly!",ResponseResultType.Success);
+        PrintMessage("Message sent successfuly!",ResponseResultType.Success);
         return new HomePageAction { UserId= UserId };
     }
 }

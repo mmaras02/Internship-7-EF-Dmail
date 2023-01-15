@@ -13,7 +13,7 @@ public class OutgoingMailAction : IAction
     public int UserId;
     public IAction Action()
     {
-        Printer.PrintTitle("Outgoing mail");
+        PrintTitle("Outgoing mail");
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var index = 0;
@@ -28,11 +28,11 @@ public class OutgoingMailAction : IAction
             Console.WriteLine($"{++index}. Title: {item.Title}\nSent to: {ReadEmail(recipients)}\n");
         }
         if (index == 0)
-            Printer.ConfirmMessage("You didn't send any messages ",ResponseResultType.NoChanges);
+            PrintMessage("You didn't send any messages ",ResponseResultType.NoChanges);
 
-        Printer.ChosenEmail(UserId, index, outgoing);
+        ChooseEmail(UserId, index, outgoing);
 
-        Checker.UserInput("go back to menu");
+        UserInput("to go back to menu");
         return  new HomePageAction { UserId= UserId };  
     }
     public string ReadEmail(ICollection<User>recipients)

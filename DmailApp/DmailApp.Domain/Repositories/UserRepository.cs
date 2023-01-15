@@ -71,18 +71,15 @@ public class UserRepository : BaseRepository
     {
         User? user = DbContext.Users.FirstOrDefault(u => u.Email == email);
 
+        if(!CheckPassword(email,password))
+            return ResponseResultType.ValidationError;
+
         if (user == null)
             return ResponseResultType.NotFound;
 
         if ((DateTime.UtcNow - user.FailedLogin) < TimeSpan.FromSeconds(30))
             return ResponseResultType.Error;
 
-        if (PasswordHashed(password) != user.HashedPassword)
-        {
-            user.FailedLogin=DateTime.UtcNow;
-            DbContext.SaveChanges();
-            return ResponseResultType.ValidationError;
-        }
         return ResponseResultType.Success;
     }
     private byte[] PasswordHashed(string password)

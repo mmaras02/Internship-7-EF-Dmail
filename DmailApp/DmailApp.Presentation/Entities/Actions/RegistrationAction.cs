@@ -13,8 +13,7 @@ public class RegistrationAction:IAction
     {
         var userRepository = RepositoryFactory.Create<UserRepository>();
 
-        Console.Clear();
-        Console.WriteLine("Register");
+        PrintTitle("Register");
 
         Console.WriteLine("Enter your email: ");
         var email = Checker.CheckEmail(input => !userRepository.DoesEmailExists((string)input));

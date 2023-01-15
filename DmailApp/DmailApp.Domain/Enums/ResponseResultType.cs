@@ -7,5 +7,6 @@ public enum ResponseResultType
     AlreadyExists,
     NoChanges,
     Error,
-    ValidationError
+    ValidationError,
+    Warning
 }

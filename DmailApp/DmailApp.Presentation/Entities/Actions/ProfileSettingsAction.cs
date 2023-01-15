@@ -17,16 +17,16 @@ public class ProfileSettingsAction : IAction
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
 
-        Printer.PrintTitle("Profile settings");
+        PrintTitle("Profile settings");
         var markedSpam = spamRepository.GetSpamIdsList(UserId);
 
         Console.WriteLine("\nList of users that sent you mails: ");
         var senderIds = userRepository.GetSendersByReceiver(UserId).Distinct().ToList();
-        Printer.PrintUsers(senderIds,markedSpam);
+        PrintUsers(senderIds,markedSpam);
 
         Console.WriteLine("\nList of users that you sent mails to: ");//boja?
         var receiversIds = userRepository.GetRecipientsBySender(UserId).Distinct().ToList();
-        Printer.PrintUsers(receiversIds, markedSpam);
+        PrintUsers(receiversIds, markedSpam);
 
         List<int> everyId = receiversIds.Concat(senderIds).Distinct().ToList();
 
@@ -35,7 +35,7 @@ public class ProfileSettingsAction : IAction
 
         if (access != "y")
         {
-            Printer.ConfirmMessage("Going back to home page...", ResponseResultType.Success);
+            PrintMessage("Going back to home page...", ResponseResultType.Success);
             return new HomePageAction { UserId=UserId };
         }
         var index = 0;
@@ -51,13 +51,13 @@ public class ProfileSettingsAction : IAction
         {
             //Console.WriteLine("User is not spam. Mark it as spam? <y>");//napravi f-ju
             spamRepository.MarkSpam(UserId, userRepository.GetById(everyId[input - 1]).Id);
-            Printer.ConfirmMessage("Successfully marked as spam!\nGoing back to main menu ", ResponseResultType.Success);
+            PrintMessage("Successfully marked as spam!\nGoing back to main menu ", ResponseResultType.Success);
             return new HomePageAction { UserId = UserId };
         }
         else if(markedSpam.Contains(everyId[input - 1]))
         {
             spamRepository.RemoveSpam(UserId, userRepository.GetById(everyId[input - 1]).Id);
-            Printer.ConfirmMessage("Successfully  removed spam!\nGoing back to main menu", ResponseResultType.Success);
+            PrintMessage("Successfully  removed spam!\nGoing back to main menu", ResponseResultType.Success);
         }
 
         return new HomePageAction { UserId=UserId};

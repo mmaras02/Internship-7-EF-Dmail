@@ -17,10 +17,10 @@ public class HomePageAction:IAction
         var userRepository = RepositoryFactory.Create<UserRepository>();
 
         Console.Clear();
-        Printer.PrintTitle("Home page");
-        Printer.PrintHomePageMenu();
+        PrintTitle("Home page");
+        PrintHomePageMenu();
 
-        switch (Checker.NumberInput(7))
+        switch (NumberInput(maxNumber: 7))
         {
             case 1:
                 return new PrimaryMailAction { UserId = UserId };
@@ -44,6 +44,5 @@ public class HomePageAction:IAction
                 return new LogOutAction { UserId = UserId };
         }
         return null;
-        //return new HomePageAction { };
     }
 }

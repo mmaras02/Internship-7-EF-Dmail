@@ -18,19 +18,19 @@ public class SpamMailAction : IAction
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
         var userRepository= RepositoryFactory.Create<UserRepository>();
 
-        if (Printer.PrintSpamMail(UserId) == ResponseResultType.Error)
+        if (PrintSpamMail(UserId) == ResponseResultType.Error)
             return new HomePageAction { UserId=UserId};
 
         Console.WriteLine($"\n\n1.Mark new spam user\n2.Remove spam user\n'exit'-exit\n");
 
-        switch(Checker.NumberInput(maxNumber:2))
+        switch(NumberInput(maxNumber:2))
         {
             case 1:
                 Console.WriteLine("Enter email you want to mark as spam: ");
                 var email = Checker.CheckEmail(input => userRepository.DoesEmailExists(input));
 
                 spamRepository.MarkSpam(UserId, userRepository.GetByEmail(email).Id);
-                Printer.ConfirmMessage("Sucessfully added spam user", ResponseResultType.Success);
+                PrintMessage("Sucessfully added spam user", ResponseResultType.Success);
 
                 return new SpamMailAction{UserId=UserId };
             case 2:
@@ -38,15 +38,14 @@ public class SpamMailAction : IAction
                 var email1 = Console.ReadLine();
 
                 spamRepository.RemoveSpam(UserId, userRepository.GetByEmail(email1).Id);
-                Printer.ConfirmMessage("Sucessfully removed spam", ResponseResultType.Success);
+                PrintMessage("Sucessfully removed spam", ResponseResultType.Success);
 
                 return new SpamMailAction { UserId = UserId };
 
             default:
-                Printer.ConfirmMessage("Wrong input", ResponseResultType.Error);
+                PrintMessage("Wrong input", ResponseResultType.Error);
                 break;
         }
-      
-        return new HomePageAction{UserId=UserId };
+        return new HomePageAction { UserId = UserId };
     }
 }

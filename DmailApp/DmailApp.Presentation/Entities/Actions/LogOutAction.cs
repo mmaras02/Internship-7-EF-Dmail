@@ -9,7 +9,7 @@ public class LogOutAction : IAction
     public int UserId;
     public IAction Action()
     {
-        Printer.ConfirmMessage("Logging out...", ResponseResultType.Success);
+        PrintMessage("Logging out...", ResponseResultType.Success);
         return new MainMenuAction { };
     }
 }

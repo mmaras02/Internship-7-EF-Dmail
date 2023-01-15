@@ -14,7 +14,7 @@ public static class Printer
     public static UserRepository? userRepository = RepositoryFactory.Create<UserRepository>();
     public static MailRepository? mailRepository = RepositoryFactory.Create<MailRepository>();
     public static SpamRepository? spamRepository = RepositoryFactory.Create<SpamRepository>();
-    public static void ConfirmMessage(string message, ResponseResultType messageType)
+    public static void PrintMessage(string message, ResponseResultType messageType)
     {
         Console.ForegroundColor = ConsoleColor.Black;
         Console.BackgroundColor = ConsoleColor.White;
@@ -27,6 +27,9 @@ public static class Printer
 
         if(messageType==ResponseResultType.NoChanges)
             Console.BackgroundColor = ConsoleColor.Yellow;
+
+        if (messageType == ResponseResultType.Warning)
+            Console.BackgroundColor = ConsoleColor.DarkRed;
 
         Console.WriteLine($"{message}, press any key to continue");
         Console.ReadKey();
@@ -69,7 +72,7 @@ public static class Printer
 
         if(spamIds.Count is 0 )
         {
-            ConfirmMessage("you don't have any users marked as spam", ResponseResultType.Error);
+            PrintMessage("you don't have any users marked as spam", ResponseResultType.Error);
             return ResponseResultType.Error;
         }
         Console.WriteLine("List of users you marked as spam:");
@@ -89,15 +92,16 @@ public static class Printer
         }
         if (index is 0)
         {
-            ConfirmMessage("You don't have any mails in this container!", ResponseResultType.NoChanges);
+            PrintMessage("You don't have any mails in this container!", ResponseResultType.NoChanges);
             return;
         }
-        ChosenEmail(userId, index, mail);
+        ChooseEmail(userId, index, mail);
     }
-    public static void ChosenEmail(int userId,int index,List<Mail> mail)
+    public static void ChooseEmail(int userId,int index,List<Mail> mail)
     {
         Console.WriteLine("\nEnter the number of the message you want to enter or enter 0 for returning to main menu");
-        Checker.CheckNumber(Console.ReadLine(), out var input);
+        int.TryParse(Console.ReadLine(), out int input);
+
         if (input is 0)
             return;
 
@@ -105,7 +109,7 @@ public static class Printer
             PrintMail(mail[input - 1].MailId, userId);
 
         else
-            ConfirmMessage("Incorrect input! ", ResponseResultType.Error);
+            PrintMessage("Incorrect input! ", ResponseResultType.Error);
     }
     public static void PrintMail(int mailId, int userId)
     {

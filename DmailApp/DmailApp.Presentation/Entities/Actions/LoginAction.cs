@@ -10,32 +10,24 @@ public class LoginAction:IAction
 {
     public IAction Action ()
     {
-        //DateTime loginTime = new DateTime();
-        //var email = "";
-        //var password = "";
-
         var userRepository = RepositoryFactory.Create<UserRepository>();
 
-        Console.Clear();
-        Printer.PrintTitle("Login");
+        PrintTitle("Login");
 
         Console.WriteLine("Enter your email");
-        var email = Checker.CheckEmail(input => userRepository.DoesEmailExists(input));
+        var email=Console.ReadLine();
 
         Console.WriteLine("Enter password");
-        var password = Checker.PasswordInput(input => userRepository.CheckPassword(email, input));
-       
-        var userId =userRepository.GetIdByEmail(email);
+        var password = ReadPassword();
 
-        //if (userRepository.CheckLogin(email, password) == ResponseResultType.Success)
-        return new HomePageAction { UserId = userId };
+        if (userRepository.CheckLogin(email, password) == ResponseResultType.Success)
+        {
+            var userId = userRepository.GetIdByEmail(email);
+            return new HomePageAction { UserId = userId };
+        }
 
-        //if(userRepository.CheckLogin(email,password)==ResponseResultType.Error)
-        //{
-        //    Console.WriteLine("Login unsuccessfull. Try again in 30 seconds!");
-        //    Thread.Sleep(30000);
-        //    Console.ReadLine();
-        //}
-        //return new MainMenuAction { };
+        PrintMessage("Incorrect email-password combination\n30 seconds timeout!",ResponseResultType.Warning);
+        Thread.Sleep(30000);
+        return new MainMenuAction { };
     }
 }

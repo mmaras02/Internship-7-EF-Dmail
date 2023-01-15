@@ -8,11 +8,10 @@ public class MainMenuAction : IAction
 {
     public IAction Action()
     {
-        Console.Clear();
-        Printer.PrintTitle("Welcome to DmailApp");
-        Printer.PrintMainMenu();
+        PrintTitle("Welcome to DmailApp");
+        PrintMainMenu();
 
-        switch (Checker.NumberInput(2))
+        switch (NumberInput(2))
         {
             case 1:
                 return new LoginAction { };
