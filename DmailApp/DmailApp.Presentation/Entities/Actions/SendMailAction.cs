@@ -4,10 +4,6 @@ using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
-using Microsoft.EntityFrameworkCore;
-using System;
-
 
 namespace DmailApp.Presentation.Entities.Actions;
 
@@ -16,16 +12,16 @@ public class SendMailAction : IAction
     public int UserId;
     public IAction Action()
     {
-        Printer.PrintTitle("New mail");
+        PrintTitle("New mail");
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
 
         Console.WriteLine("Enter title: ");
-        var validTitle = Checker.CheckString(Console.ReadLine(), out string title);
+        var validTitle = CheckString(Console.ReadLine(), out string title);
         
         Console.WriteLine("Enter mail content: ");
-        var validContent=Checker.CheckString(Console.ReadLine(), out string content);
+        var validContent=CheckString(Console.ReadLine(), out string content);
 
         if (!validContent || !validContent)
             PrintMessage("Wrong input! Can't be empty field", ResponseResultType.Error);

@@ -74,39 +74,6 @@ public class MailRepository : BaseRepository
        
         return receivers;
     }
-    public List<Mail>GetReadSpamMail(int userId)
-    {
-        var readSpam=DbContext.Recipients
-            .Where(rm=>rm.ReceiverId==userId)
-            .Where(rm=>rm.MailStatus== MailStatus.Read) 
-            .Join(DbContext.Mails,rm=>rm.MailId,m=>m.MailId,(rm, m) => new {rm, m})
-            .Select(a=>a.m)
-            .OrderByDescending(m=>m.TimeOfSending)
-            .ToList();
-        foreach(var item in readSpam)
-        {
-            if (DbContext.SpamFlag.Find(userId, item.Sender) != null)
-                readSpam.Remove(item);
-        }
-        return readSpam;
-    }
-    public List<Mail> GetUnreadSpamMail(int userId)
-    {
-        var unreadSpam = DbContext.Recipients
-            .Where(rm => rm.ReceiverId == userId)
-            .Where(rm => rm.MailStatus == MailStatus.Unread)
-            .Join(DbContext.Mails, rm => rm.MailId, m => m.MailId, (rm, m) => new { rm, m })
-            .Select(a => a.m)
-            .OrderByDescending(m => m.TimeOfSending)
-            .ToList();
-
-        foreach (var item in unreadSpam)
-        {
-            if (DbContext.SpamFlag.Find(userId, item.Sender) != null)
-                unreadSpam.Remove(item);
-        }
-        return unreadSpam;
-    }
     public List<Mail>GetReadMail(int userId)
     {
         var readMail = GetAll()
@@ -170,6 +137,7 @@ public class MailRepository : BaseRepository
             .Select(a=>a.m)
             .OrderByDescending(m=>m.TimeOfSending)
             .ToList();
+
         return result;
     }
 }

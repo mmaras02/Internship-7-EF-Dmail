@@ -1,6 +1,7 @@
 ﻿using DmailApp.Data.Entities.Models;
 using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
+using DmailApp.Presentation.Entities.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,5 +99,19 @@ public static class Checker
             PrintMessage("Invalid input! ", ResponseResultType.Error);
             UserInput("for return to main page");
         }
+    }
+    public static void CheckSearchedInput(int userId)
+    {
+        Console.Write("Search specific user: ");
+        var query = Console.ReadLine();
+
+        var result = mailRepository.SearchByString(userId, query);
+        if (!result.Any())
+        {
+            PrintMessage("Nothing was found for your search!", ResponseResultType.Error);
+            return;
+        }
+        Console.WriteLine("Here are found mails");
+        ReadMail(userId, result, true);
     }
 }

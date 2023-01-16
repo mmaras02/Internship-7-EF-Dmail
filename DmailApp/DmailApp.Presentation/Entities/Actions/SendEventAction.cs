@@ -4,10 +4,6 @@ using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
-using Microsoft.EntityFrameworkCore;
-using System;
-
 
 namespace DmailApp.Presentation.Entities.Actions;
 
@@ -17,13 +13,13 @@ public class SendEventAction : IAction
 
     public IAction Action()
     {
-        Printer.PrintTitle("New event");
+        PrintTitle("New event");
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository = RepositoryFactory.Create<MailRepository>();
         var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
 
         Console.WriteLine("Enter title: ");
-        var validTitle = Checker.CheckString(Console.ReadLine(), out string title);
+        var validTitle = CheckString(Console.ReadLine(), out string title);
         
         Console.WriteLine("Enter event date start (yyyy-MM-dd HH:mm:ss): ");
         var validDate = DateTime.TryParse(Console.ReadLine(), out DateTime dateInput);

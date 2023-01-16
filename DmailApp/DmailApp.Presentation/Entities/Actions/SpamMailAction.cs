@@ -1,10 +1,7 @@
-﻿using DmailApp.Data.Entities.Models;
-using DmailApp.Domain.Enums;
+﻿using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
-
 
 namespace DmailApp.Presentation.Entities.Actions;
 
@@ -19,30 +16,20 @@ public class SpamMailAction : IAction
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
         var userRepository= RepositoryFactory.Create<UserRepository>();
 
-        switch (Checker.NumberInput(maxNumber: 3))
+        switch (NumberInput(maxNumber: 3))
         {
             case 1:
-                var readSpam = mailRepository.GetReadSpamMail(UserId);
+                var readSpam = spamRepository.GetReadSpamMail(UserId);
                 ReadMail(UserId, readSpam, true);
 
                 return new SpamMailAction { UserId = UserId };
             case 2:
-                var unreadSpam = mailRepository.GetUnreadSpamMail(UserId);
+                var unreadSpam = spamRepository.GetUnreadSpamMail(UserId);
                 ReadMail(UserId, unreadSpam, true);
 
                 return new SpamMailAction { UserId = UserId };
             case 3:
-                Console.Write("Search specific user: ");
-                var query=Console.ReadLine();
-
-                var result=mailRepository.SearchByString(UserId, query);
-                if(result is null)
-                {
-                    PrintMessage("Nothing was found for your search!", ResponseResultType.Error);
-                    return new SpamMailAction { UserId = UserId };    
-                }
-                Console.WriteLine("Here are found mails");
-                ReadMail(UserId, result, true);
+                CheckSearchedInput(UserId);
 
                 return new SpamMailAction { UserId = UserId };
                 break;

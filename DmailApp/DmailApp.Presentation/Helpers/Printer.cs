@@ -66,7 +66,7 @@ public static class Printer
     }
     public static void ReadMail(int userId, List<Mail> mail,bool inbox)
     {
-        Console.Clear();
+        //Console.Clear();
         var index = 0;
 
         Console.WriteLine("\tTitle\t\tSender");

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DmailApp.Data.Entities.Enums;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -79,5 +80,41 @@ public class SpamRepository : BaseRepository
         foreach (var item in spam)
             spamList.Add(item.SpamUserId);
         return spamList;
+    }
+    public List<Mail> GetUnreadSpamMail(int userId)
+    {
+        var unreadSpam = DbContext.Recipients
+            .Where(rm => rm.ReceiverId == userId)
+            .Where(rm => rm.MailStatus == MailStatus.Unread)
+            .Join(DbContext.Mails, rm => rm.MailId, m => m.MailId, (rm, m) => new { rm, m })
+            .Select(a => a.m)
+            .OrderByDescending(m => m.TimeOfSending)
+            .ToList();
+
+        List<Mail> unreadList = new List<Mail>();
+        foreach (var item in unreadSpam)
+        {
+            if (DoesSpamPairExist(userId, item.SenderId))
+                unreadList.Add(item);
+        }
+        return unreadList;
+    }
+    public List<Mail> GetReadSpamMail(int userId)
+    {
+        var readSpam = DbContext.Recipients
+            .Where(rm => rm.ReceiverId == userId)
+            .Where(rm => rm.MailStatus == MailStatus.Read)
+            .Join(DbContext.Mails, rm => rm.MailId, m => m.MailId, (rm, m) => new { rm, m })
+            .Select(a => a.m)
+            .OrderByDescending(m => m.TimeOfSending)
+            .ToList();
+
+        List<Mail> readList = new List<Mail>();
+        foreach (var item in readSpam)
+        {
+            if (DoesSpamPairExist(userId, item.SenderId))
+                readList.Add(item);
+        }
+        return readList;
     }
 }

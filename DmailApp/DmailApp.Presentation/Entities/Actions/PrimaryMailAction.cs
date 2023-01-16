@@ -1,4 +1,5 @@
-﻿using DmailApp.Domain.Factories;
+﻿using DmailApp.Domain.Enums;
+using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
 
@@ -27,6 +28,8 @@ public class PrimaryMailAction : IAction
 
                 return new PrimaryMailAction { UserId = UserId };
             case 3:
+                CheckSearchedInput(UserId);
+                return new PrimaryMailAction { UserId = UserId };
                 break;
             case 0:
                 return new HomePageAction { UserId = UserId };
