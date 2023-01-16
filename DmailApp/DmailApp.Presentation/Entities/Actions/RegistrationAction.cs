@@ -1,7 +1,6 @@
 ﻿using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
-using System.Security.Cryptography.X509Certificates;
+//using System.Security.Cryptography.X509Certificates;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Enums;
 
@@ -16,7 +15,7 @@ public class RegistrationAction:IAction
         PrintTitle("Register");
 
         Console.WriteLine("Enter your email: ");
-        var email = Checker.CheckEmail(input => !userRepository.DoesEmailExists((string)input));
+        var email = CheckEmail(input => !userRepository.DoesEmailExists((string)input));
 
         if (userRepository.ValidateEmail(email) == ResponseResultType.ValidationError)
         {
@@ -25,14 +24,22 @@ public class RegistrationAction:IAction
         }
 
         Console.WriteLine("Enter password: ");
-        var password = Checker.PasswordInput(input=>true);
+        var password = PasswordInput(input=>true);
 
         Console.WriteLine("Enter password again ");
-        var confirmPassword=Checker.PasswordInput(input=>true);
+        var confirmPassword=PasswordInput(input=>true);
 
         if (password != confirmPassword)
         {
-            Console.WriteLine("Wrong input! Passwords do not match!");
+            PrintMessage("Wrong input! Passwords do not match!", ResponseResultType.Warning);
+            return new MainMenuAction { };
+        }
+        
+        var captcha = GenerateRandomString();
+        var userCaptha=Console.ReadLine();
+        if(captcha!=userCaptha)
+        {
+            PrintMessage("Incorrect string input!",ResponseResultType.Error);
             return new MainMenuAction { };
         }
         var (userId, status) = userRepository.Add(email, password);
@@ -41,5 +48,19 @@ public class RegistrationAction:IAction
             return new HomePageAction { UserId = userId };
 
         return null;
+    }
+    public string GenerateRandomString()
+    {
+        int length = 8;
+        const string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        var random = new Random();
+        var result = new string(
+            Enumerable.Repeat(validCharacters, length)
+                      .Select(s => s[random.Next(s.Length)])
+                      .ToArray());
+
+        Console.WriteLine("Repeat the given string: ");
+        Console.WriteLine(result);
+        return result;
     }
 }

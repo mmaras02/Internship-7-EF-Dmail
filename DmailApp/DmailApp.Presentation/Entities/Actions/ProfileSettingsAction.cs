@@ -2,9 +2,6 @@
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
-using System;
-using System.Linq;
 
 namespace DmailApp.Presentation.Entities.Actions;
 
@@ -45,7 +42,7 @@ public class ProfileSettingsAction : IAction
         }
      
         Console.WriteLine("Enter number you want to change ");
-        var input = Checker.NumberInput(maxNumber: index);
+        var input = NumberInput(maxNumber: index);
 
         if (!markedSpam.Contains(everyId[input - 1]))
         {

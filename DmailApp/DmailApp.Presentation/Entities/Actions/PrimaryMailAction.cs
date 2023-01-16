@@ -1,9 +1,6 @@
-﻿using DmailApp.Data.Entities.Models;
-using DmailApp.Domain.Enums;
-using DmailApp.Domain.Factories;
+﻿using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
-using DmailApp.Presentation.Helpers;
 
 namespace DmailApp.Presentation.Entities.Actions;
 
@@ -17,7 +14,7 @@ public class PrimaryMailAction : IAction
         var userRepository = RepositoryFactory.Create<UserRepository>();
         var mailRepository=RepositoryFactory.Create<MailRepository>();
 
-        switch(Checker.NumberInput(maxNumber: 3))
+        switch(NumberInput(maxNumber: 3))
         {
             case 1:
                 var readMail = mailRepository.GetReadMail(UserId);
