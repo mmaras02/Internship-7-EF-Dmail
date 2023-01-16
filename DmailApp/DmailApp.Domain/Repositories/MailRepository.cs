@@ -1,20 +1,16 @@
 ﻿using DmailApp.Data.Entities;
 using DmailApp.Data.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using DmailApp.Domain.Enums;
 using DmailApp.Data.Entities.Enums;
-using System.Text.RegularExpressions;
 using DmailApp.Domain.Factories;
-using System.Drawing.Printing;
-using System.Collections;
 
 namespace DmailApp.Domain.Repositories;
 
 public class MailRepository : BaseRepository
 {
     public MailRepository(DmailAppDbContext dbContext) : base(dbContext) { }
-
+    public static UserRepository? userRepository = RepositoryFactory.Create<UserRepository>();
     public ResponseResultType Add(Mail mail)
     {
         if (mail.Title.Length == 0)
@@ -65,8 +61,6 @@ public class MailRepository : BaseRepository
             .ToList();
 
         List<User> receivers = new List<User>();
-        var userRepository = RepositoryFactory.Create<UserRepository>();
-
         foreach (var user in recipient)
         {
             receivers.Add(userRepository.GetById(user.ReceiverId));
@@ -83,7 +77,14 @@ public class MailRepository : BaseRepository
             .Where(a => a.rm.MailStatus == MailStatus.Read)
             .Where(a => a.rm.ReceiverId == userId)
             .Select(a => a.m).ToList();
-        return readMail;
+
+        List<Mail> readList = new List<Mail>();
+        foreach (var item in readMail)
+        {
+            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id,item.SenderId) is null)
+                readList.Add(item);
+        }
+        return readList;
     }
     public List<Mail> GetUnreadMail(int userId)
     {
@@ -94,15 +95,21 @@ public class MailRepository : BaseRepository
             .Where(a => a.rm.MailStatus == MailStatus.Unread)
             .Where(a => a.rm.ReceiverId == userId)
             .Select(a => a.m).ToList();
-        return unreadMail;
+
+        List<Mail> unreadList = new List<Mail>();
+        foreach (var item in unreadMail)
+        {
+            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id, item.SenderId)is null)
+                unreadList.Add(item);
+        }
+        return unreadList;
     }
-    public ResponseResultType ChangeToRead(Mail mail)
+    public ResponseResultType ChangeToRead(int mailId)
     {
-        var mailToUpdate = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mail.MailId);
-        if (mailToUpdate is null)
-            return ResponseResultType.NoChanges;
+        var mailToUpdate = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mailId);
 
         mailToUpdate.MailStatus = MailStatus.Read;
+
         return SaveChanges();
     }
     public ResponseResultType ChangeToUnread(Mail mail)
@@ -113,6 +120,20 @@ public class MailRepository : BaseRepository
     
         mailToUpdate.MailStatus = MailStatus.Unread;
         return SaveChanges();
+    }
+    public EventStatus ChangeEventStatus(Mail mail,EventStatus status)
+    {
+        var eventToUpdate = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mail.MailId);
+        if (eventToUpdate is null)
+            return EventStatus.NoResponse;
+
+        eventToUpdate.EventStatus = status;
+        return (EventStatus)SaveChanges();
+    }
+    public EventStatus GetEventStatus(int mailId)
+    {
+        var status = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mailId);
+        return (EventStatus)status.EventStatus;
     }
     public ICollection<Mail>GetSentMail(int userId)
     {

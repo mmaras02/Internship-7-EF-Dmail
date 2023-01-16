@@ -57,7 +57,7 @@ public static class Printer
     }
     public static void PrintInbox()
     {
-        Console.WriteLine("\n1.Read mail\n2.Unread mail\n3.Search mail from user\n0.Back to main menu\n");
+        Console.WriteLine("Actions available\n1.Read mail\n2.Unread mail\n3.Search mail from user\n0.Back to main menu\n");
     }
     public static void PrintOptions()
     {
@@ -68,8 +68,7 @@ public static class Printer
     {
         //Console.Clear();
         var index = 0;
-
-        Console.WriteLine("\tTitle\t\tSender");
+        //Console.WriteLine("\tTitle\t\tSender");
         foreach (var item in mail)
         {
             Console.WriteLine($"{++index}. {item.Title} - {userRepository.GetById(item.SenderId).Email}");
@@ -129,6 +128,29 @@ public static class Printer
                 PrintMessage("You deleted choosen mail! ", ResponseResultType.Success);
                 return;
             case 4:
+                //odgovori na event
+                if(mail.MailType==MailType.EventMail)
+                {
+                    Console.WriteLine("Answer the event invitation:");
+                    Console.WriteLine("1.Accept invitation\n2.Decline invitation\n0.Leave unanswered");
+                    switch(NumberInput(maxNumber:2))
+                    {
+                        case 1:
+                            mailRepository.ChangeEventStatus(mail, EventStatus.Accepted);
+                            PrintMessage("Invitation accepted!", ResponseResultType.Success);
+                            break;
+                        case 2:
+                            mailRepository.ChangeEventStatus(mail, EventStatus.Rejected);
+                            PrintMessage("Invitation rejected!", ResponseResultType.Success);
+                            break;
+                        case 0:
+                            PrintMessage("Left unanswered!", ResponseResultType.Warning);
+                            return;
+                        default:
+                            return;
+                    }
+                }
+               
                 return;
             default:
                 return;
@@ -136,14 +158,15 @@ public static class Printer
     }
     public static void PrintDetailedMail(int mailId, int userId)
     {
-        Mail mail = mailRepository.GetById(mailId);
+        mailRepository.ChangeToRead(mailId);
 
-        mailRepository.ChangeToRead(mail);
+        Mail mail = mailRepository.GetById(mailId);
         var sender = userRepository.GetById(mail.SenderId);
 
         if (mail.MailType is MailType.MessageMail)
         {
-            Console.WriteLine($"Title: {mail.Title}\nTime of sending: {mail.TimeOfSending}\nSender: {sender.Email}\n");
+            Console.WriteLine($"Title: {mail.Title}\nTime of sending: {mail.TimeOfSending}\nSender: {sender.Email}");
+            Console.WriteLine("-------------------------");
             Console.WriteLine($"{mail.Content}\n");
         }
         else if (mail.MailType is MailType.EventMail)
@@ -158,6 +181,7 @@ public static class Printer
             {
                 Console.WriteLine($"{recipient.Email}");
             }
+            Console.WriteLine($"\nYou have {mailRepository.GetEventStatus(mailId)} this invitation!");
         }
     }
     public static void PrintUsers(List<int>userIds,List<int>markedSpam) 
