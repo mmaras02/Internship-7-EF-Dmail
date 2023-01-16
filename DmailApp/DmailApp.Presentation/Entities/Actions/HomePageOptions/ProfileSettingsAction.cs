@@ -11,7 +11,6 @@ public class ProfileSettingsAction : IAction
     public IAction Action()
     {
         var userRepository = RepositoryFactory.Create<UserRepository>();
-        var mailRepository = RepositoryFactory.Create<MailRepository>();
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
 
         PrintTitle("Profile settings");
@@ -19,7 +18,7 @@ public class ProfileSettingsAction : IAction
 
         Console.WriteLine("\nList of users that sent you mails: ");
         var senderIds = userRepository.GetSendersByReceiver(UserId).Distinct().ToList();
-        PrintUsers(senderIds,markedSpam);
+        PrintUsers(senderIds, markedSpam);
 
         Console.WriteLine("\nList of users that you sent mails to: ");//boja?
         var receiversIds = userRepository.GetRecipientsBySender(UserId).Distinct().ToList();
@@ -27,22 +26,24 @@ public class ProfileSettingsAction : IAction
 
         List<int> everyId = receiversIds.Concat(senderIds).Distinct().ToList();
 
-        Console.WriteLine($"\nDo you want to access user? (y/n)");
-        var access=Console.ReadLine();
+        if (everyId.Contains(UserId))
+            everyId.Remove(UserId);
 
-        if (access != "y")
+        if (!GetConfirmation("acces user? "))
         {
             PrintMessage("Going back to home page...", ResponseResultType.Success);
-            return new HomePageAction { UserId=UserId };
+            return new HomePageAction { UserId = UserId };
         }
         Console.Clear();
         var index = 0;
-        foreach(var item in everyId)
+
+        Console.WriteLine("\nList of all users you have:");
+        foreach (var item in everyId)
         {
             Console.WriteLine($"{++index}.{userRepository.GetById(item).Email}");
         }
-     
-        Console.WriteLine("Enter number you want to change ");
+
+        Console.WriteLine("\nEnter number you want to change ");
         var input = NumberInput(maxNumber: index);
 
         if (!markedSpam.Contains(everyId[input - 1]))
@@ -51,12 +52,12 @@ public class ProfileSettingsAction : IAction
             PrintMessage("Successfully marked as spam!\nGoing back to main menu ", ResponseResultType.Success);
             return new HomePageAction { UserId = UserId };
         }
-        else if(markedSpam.Contains(everyId[input - 1]))
+        else if (markedSpam.Contains(everyId[input - 1]))
         {
             spamRepository.RemoveSpam(UserId, userRepository.GetById(everyId[input - 1]).Id);
             PrintMessage("Successfully  removed spam!\nGoing back to main menu", ResponseResultType.Success);
         }
 
-        return new HomePageAction { UserId=UserId};
+        return new HomePageAction { UserId = UserId };
     }
 }

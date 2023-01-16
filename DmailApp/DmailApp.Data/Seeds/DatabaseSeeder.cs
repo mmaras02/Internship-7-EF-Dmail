@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DmailApp.Data.Entities.Enums;
 using DmailApp.Data.Entities.Models;
-using System.Text;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using DmailApp.Data.Entities.Enums;
+using System.Text;
 
 namespace DmailApp.Data.Seeds;
 

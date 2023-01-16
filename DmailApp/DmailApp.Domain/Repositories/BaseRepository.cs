@@ -1,5 +1,4 @@
-﻿using DmailApp.Domain.Enums;
-using DmailApp.Data.Entities;
+﻿using DmailApp.Data.Entities;
 using DmailApp.Domain.Enums;
 
 namespace DmailApp.Domain.Repositories;

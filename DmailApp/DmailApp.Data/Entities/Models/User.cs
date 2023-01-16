@@ -1,7 +1,3 @@
-using DmailApp.Data.Entities.Models;
-using DmailApp.Data.Entities.Enums;
-using System.Collections.Generic;
-
 namespace DmailApp.Data.Entities.Models;
 
 public class User
@@ -10,7 +6,7 @@ public class User
     public string Email { get; set; }
     public string? Password { get; set; }
     public byte[] HashedPassword { get; set; }
-    public DateTime FailedLogin { get; set; }   
+    public DateTime FailedLogin { get; set; }
 
     public ICollection<Mail> SentMail { get; } = new List<Mail>();
     public ICollection<ReceiverMail> ReceivedMail { get; } = new List<ReceiverMail>();

@@ -1,5 +1,4 @@
-﻿using DmailApp.Domain.Enums;
-using DmailApp.Domain.Factories;
+﻿using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
 
@@ -14,7 +13,7 @@ public class SpamMailAction : IAction
         PrintInbox();
 
         var spamRepository = RepositoryFactory.Create<SpamRepository>();
-        var userRepository= RepositoryFactory.Create<UserRepository>();
+        var userRepository = RepositoryFactory.Create<UserRepository>();
 
         switch (NumberInput(maxNumber: 3))
         {
@@ -35,7 +34,6 @@ public class SpamMailAction : IAction
                 CheckSearchedInput(UserId);
 
                 return new SpamMailAction { UserId = UserId };
-                break;
             case 0:
                 return new HomePageAction { UserId = UserId };
             default:

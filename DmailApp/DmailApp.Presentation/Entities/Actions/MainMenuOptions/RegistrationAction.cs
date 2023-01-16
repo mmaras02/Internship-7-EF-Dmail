@@ -1,11 +1,11 @@
-﻿using DmailApp.Domain.Repositories;
-using DmailApp.Presentation.Entities.Interfaces;
+﻿using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
-using DmailApp.Domain.Enums;
+using DmailApp.Domain.Repositories;
+using DmailApp.Presentation.Entities.Interfaces;
 
 namespace DmailApp.Presentation.Entities.Actions;
 
-public class RegistrationAction:IAction
+public class RegistrationAction : IAction
 {
     public IAction Action()
     {
@@ -23,22 +23,22 @@ public class RegistrationAction:IAction
         }
 
         Console.WriteLine("Enter password: ");
-        var password = PasswordInput(input=>true);
+        var password = PasswordInput(input => true);
 
         Console.WriteLine("Enter password again ");
-        var confirmPassword=PasswordInput(input=>true);
+        var confirmPassword = PasswordInput(input => true);
 
         if (password != confirmPassword)
         {
             PrintMessage("Wrong input! Passwords do not match!", ResponseResultType.Warning);
             return new MainMenuAction { };
         }
-        
+
         var captcha = GenerateRandomString();
-        var userCaptha=Console.ReadLine();
-        if(captcha!=userCaptha)
+        var userCaptha = Console.ReadLine();
+        if (captcha != userCaptha)
         {
-            PrintMessage("Incorrect string input!",ResponseResultType.Error);
+            PrintMessage("Incorrect string input!", ResponseResultType.Error);
             return new MainMenuAction { };
         }
         var (userId, status) = userRepository.Add(email, password);

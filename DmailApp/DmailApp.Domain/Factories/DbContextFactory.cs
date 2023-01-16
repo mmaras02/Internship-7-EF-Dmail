@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DmailApp.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Configuration;
-using DmailApp.Data.Entities;
 
 namespace DmailApp.Domain.Factories;
 

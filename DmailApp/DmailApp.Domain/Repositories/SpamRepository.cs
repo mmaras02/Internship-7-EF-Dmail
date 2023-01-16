@@ -1,12 +1,7 @@
-﻿using DmailApp.Domain.Enums;
-using DmailApp.Data.Entities;
-using DmailApp.Data.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DmailApp.Data.Entities;
 using DmailApp.Data.Entities.Enums;
+using DmailApp.Data.Entities.Models;
+using DmailApp.Domain.Enums;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -14,44 +9,20 @@ public class SpamRepository : BaseRepository
 {
     public SpamRepository(DmailAppDbContext dbContext) : base(dbContext) { }
 
-    public ResponseResultType Add(SpamFlag spamUser)
+    public ICollection<SpamFlag> GetAll() => DbContext.SpamFlag.ToList();
+    public bool DoesSpamPairExist(int userId, int spamId) => GetAll().Any(sf => sf.UserId == userId && sf.SpamUserId == spamId);
+
+    public ResponseResultType MarkSpam(int userId, int spamUserId)
     {
-        if (DbContext.Users.Find(spamUser.UserId) is null)
-            return ResponseResultType.NotFound;
 
-        if (DbContext.Users.Find(spamUser.SpamUserId) is null)
-            return ResponseResultType.NotFound;
-
-        DbContext.SpamFlag.Add(spamUser);
-
-        return SaveChanges();
-    }
-
-    public ResponseResultType Delete(int userId, int spamId)
-    {
-        var spamUserToDelete = DbContext.SpamFlag.FirstOrDefault(u => u.UserId == userId && u.SpamUserId == spamId);
-
-        if (spamUserToDelete is null)
-            return ResponseResultType.NotFound;
-
-        DbContext.SpamFlag.Remove(spamUserToDelete);
-
-        return SaveChanges();
-    }
-    public ICollection<SpamFlag>GetAll()=>DbContext.SpamFlag.ToList();
-    public bool DoesSpamPairExist(int userId, int spamId)=> GetAll().Any(sf => sf.UserId == userId && sf.SpamUserId == spamId);
-
-    public ResponseResultType MarkSpam(int userId,int spamUserId)
-    {
-      
-        if(DoesSpamPairExist(userId, spamUserId))
+        if (DoesSpamPairExist(userId, spamUserId))
             return ResponseResultType.NoChanges;
 
         DbContext.SpamFlag.Add(new SpamFlag()
         {
             UserId = userId,
             SpamUserId = spamUserId,
-        
+
         });
         return SaveChanges();
     }

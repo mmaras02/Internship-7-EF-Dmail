@@ -3,9 +3,6 @@ using DmailApp.Data.Entities.Models;
 using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
-using DmailApp.Presentation.Entities.Actions;
-using DmailApp.Presentation.Helpers;
-using System.Security.Cryptography.X509Certificates;
 
 namespace DmailApp.Presentation.Helpers;
 
@@ -25,13 +22,13 @@ public static class Printer
         if (messageType == ResponseResultType.Success)
             Console.BackgroundColor = ConsoleColor.Green;
 
-        if(messageType==ResponseResultType.NoChanges)
+        if (messageType == ResponseResultType.NoChanges)
             Console.BackgroundColor = ConsoleColor.Yellow;
 
         if (messageType == ResponseResultType.Warning)
             Console.BackgroundColor = ConsoleColor.DarkRed;
 
-        Console.WriteLine($"{message}, press any key to continue");
+        Console.WriteLine($"{message} press any key to continue");
         Console.ReadKey();
         Console.ResetColor();
         Console.Clear();
@@ -48,7 +45,7 @@ public static class Printer
     }
     public static void PrintMainMenu()
     {
-        Console.WriteLine("Actions available:\n1 - Login\n2 - Registration\n'exit' - Exit the app\n");
+        Console.WriteLine("Actions available:\n1 - Login\n2 - Registration\n'exit'.Exit the app\n");
     }
     public static void PrintHomePageMenu()
     {
@@ -64,11 +61,9 @@ public static class Printer
         Console.WriteLine("\nYour options for choosen mail:");
         Console.WriteLine("1.Mark as unread\n2.Mark as spam\n3.Delete mail\n4.Reply to mail\n0.Go back to primary mail");
     }
-    public static void ReadMail(int userId, List<Mail> mail,bool inbox)
+    public static void ReadMail(int userId, List<Mail> mail, bool inbox)
     {
-        //Console.Clear();
         var index = 0;
-        //Console.WriteLine("\tTitle\t\tSender");
         foreach (var item in mail)
         {
             Console.WriteLine($"{++index}. {item.Title} - {userRepository.GetById(item.SenderId).Email}");
@@ -78,9 +73,9 @@ public static class Printer
             PrintMessage("You don't have any mails in this container!", ResponseResultType.NoChanges);
             return;
         }
-        FilterMail(userId, index, mail,inbox);
+        FilterMail(userId, index, mail, inbox);
     }
-    public static void FilterMail(int userId,int index,List<Mail> mail,bool inbox)
+    public static void FilterMail(int userId, int index, List<Mail> mail, bool inbox)
     {
         Console.WriteLine("\nNumber of the mail you want to filter\n0.Go back to main");
         int.TryParse(Console.ReadLine(), out int input);
@@ -100,7 +95,7 @@ public static class Printer
             GetOutboxActions(message.MailId);
         }
         else
-            GetInboxActions(message,userId);
+            GetInboxActions(message, userId);
     }
     public static void GetOutboxActions(int mailId)
     {
@@ -109,14 +104,14 @@ public static class Printer
 
         mailRepository.Delete(mailId);
     }
-    public static void GetInboxActions(Mail mail,int userId)
+    public static void GetInboxActions(Mail mail, int userId)
     {
         PrintOptions();
-        switch(NumberInput(maxNumber:4))
+        switch (NumberInput(maxNumber: 4))
         {
             case 1:
                 mailRepository.ChangeToUnread(mail);
-                PrintMessage("You changed mail to unread! ",ResponseResultType.Success);
+                PrintMessage("You changed mail to unread! ", ResponseResultType.Success);
                 return;
             case 2:
                 if (spamRepository.MarkSpam(userId, mail.SenderId) == ResponseResultType.NoChanges)
@@ -130,15 +125,16 @@ public static class Printer
                 return;
             case 4:
                 //odgovori na event
-                if(mail.MailType==MailType.EventMail)
+                if (mail.MailType == MailType.EventMail)
                 {
                     Console.WriteLine("Answer the event invitation:");
                     Console.WriteLine("1.Accept invitation\n2.Decline invitation\n0.Leave unanswered");
 
+                    var input = NumberInput(maxNumber: 2);
                     if (!GetConfirmation("take this action?"))
                         return;
 
-                    switch(NumberInput(maxNumber:2))
+                    switch (input)
                     {
                         case 1:
                             mailRepository.ChangeEventStatus(mail, EventStatus.Accepted);
@@ -155,19 +151,17 @@ public static class Printer
                             return;
                     }
                 }
-                if(mail.MailType==MailType.MessageMail)
+                if (mail.MailType == MailType.MessageMail)
                 {
-                    if(mailRepository.NewMail(userId, mail.SenderId)==ResponseResultType.Error)
+                    if (mailRepository.NewMail(userId, mail.SenderId) == ResponseResultType.Error)
                     {
-                        PrintMessage("Action stopped!\nReturning... ",ResponseResultType.ValidationError);
-                        return;  
+                        PrintMessage("Action stopped!\nReturning... ", ResponseResultType.ValidationError);
+                        return;
                     }
                     PrintMessage("Mail sent successfully!", ResponseResultType.Success);
                     return;
                 }
-                
                 break;
-              
             default:
                 return;
         }
@@ -200,7 +194,7 @@ public static class Printer
             Console.WriteLine($"\nYou have {mailRepository.GetEventStatus(mailId)} this invitation!");
         }
     }
-    public static void PrintUsers(List<int>userIds,List<int>markedSpam) 
+    public static void PrintUsers(List<int> userIds, List<int> markedSpam)
     {
         var index = 0;
         foreach (var item in userIds)
@@ -209,6 +203,6 @@ public static class Printer
                 Console.WriteLine($"{++index}.{userRepository.GetById(item).Email} (marked as spam)");
             else
                 Console.WriteLine($"{++index}.{userRepository.GetById(item).Email}");
-            }
         }
+    }
 }

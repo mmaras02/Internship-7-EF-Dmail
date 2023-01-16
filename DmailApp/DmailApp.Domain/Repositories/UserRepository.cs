@@ -1,13 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using DmailApp.Data.Entities;
+﻿using DmailApp.Data.Entities;
 using DmailApp.Data.Entities.Models;
 using DmailApp.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using DmailApp.Domain.Factories;
 using System.Text.RegularExpressions;
 
 namespace DmailApp.Domain.Repositories;
@@ -26,27 +21,6 @@ public class UserRepository : BaseRepository
         var newId = DbContext.Users.Where(u => u.Email == email).First().Id;
 
         return (newId, status);
-    }
-    public ResponseResultType Delete(int id)
-    {
-        var userToDelete = DbContext.Users.Find(id);
-        if (userToDelete is null)
-            return ResponseResultType.NotFound;
-
-        DbContext.Users.Remove(userToDelete);
-
-        return SaveChanges();
-    }
-    public ResponseResultType Edit(User user, int userId)
-    {
-        var userToEdit = DbContext.Users.Find(userId);
-        if (userToEdit is null)
-            return ResponseResultType.NotFound;
-
-        userToEdit.Email = user.Email;
-        userToEdit.Password = user.Password;
-
-        return SaveChanges();
     }
     public ResponseResultType ValidateEmail(string email)
     {
@@ -71,7 +45,7 @@ public class UserRepository : BaseRepository
     {
         User? user = DbContext.Users.FirstOrDefault(u => u.Email == email);
 
-        if(!CheckPassword(email,password))
+        if (!CheckPassword(email, password))
             return ResponseResultType.ValidationError;
 
         if (user == null)
@@ -94,7 +68,7 @@ public class UserRepository : BaseRepository
             .Where(rm => rm.ReceiverId == userId)
             .Select(rm => rm.Mail.SenderId)
             .ToList();
-    
+
         return senderIds;
     }
     public List<int> GetRecipientsBySender(int userId)

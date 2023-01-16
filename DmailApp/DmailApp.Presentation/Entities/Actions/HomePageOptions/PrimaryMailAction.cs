@@ -1,5 +1,4 @@
-﻿using DmailApp.Domain.Enums;
-using DmailApp.Domain.Factories;
+﻿using DmailApp.Domain.Factories;
 using DmailApp.Domain.Repositories;
 using DmailApp.Presentation.Entities.Interfaces;
 
@@ -12,21 +11,20 @@ public class PrimaryMailAction : IAction
     {
         PrintTitle("Inbox Mail");
         PrintInbox();
-        var userRepository = RepositoryFactory.Create<UserRepository>();
-        var mailRepository=RepositoryFactory.Create<MailRepository>();
+        var mailRepository = RepositoryFactory.Create<MailRepository>();
 
-        switch(NumberInput(maxNumber: 3))
+        switch (NumberInput(maxNumber: 3))
         {
             case 1:
                 Console.Clear();
                 var readMail = mailRepository.GetReadMail(UserId);
-                ReadMail(UserId,readMail,true);
+                ReadMail(UserId, readMail, true);
 
-                return new PrimaryMailAction { UserId = UserId }; 
+                return new PrimaryMailAction { UserId = UserId };
             case 2:
                 Console.Clear();
                 var readMails = mailRepository.GetUnreadMail(UserId);
-                ReadMail(UserId, readMails,true);
+                ReadMail(UserId, readMails, true);
 
                 return new PrimaryMailAction { UserId = UserId };
             case 3:

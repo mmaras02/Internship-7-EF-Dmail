@@ -1,5 +1,4 @@
-﻿using DmailApp.Domain.Factories;
-using DmailApp.Domain.Repositories;
+﻿using DmailApp.Domain.Repositories;
 
 namespace DmailApp.Domain.Factories;
 

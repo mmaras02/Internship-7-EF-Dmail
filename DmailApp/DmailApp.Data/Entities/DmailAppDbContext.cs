@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DmailApp.Data.Entities.Models;
+using DmailApp.Data.Seeds;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using DmailApp.Data.Entities.Models;
-using DmailApp.Data.Seeds;
-using System.Configuration;
-using System;
 
 namespace DmailApp.Data.Entities;
 public class DmailAppDbContext : DbContext

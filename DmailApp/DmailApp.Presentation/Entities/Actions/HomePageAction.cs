@@ -4,7 +4,7 @@ using DmailApp.Presentation.Entities.Interfaces;
 
 namespace DmailApp.Presentation.Entities.Actions;
 
-public class HomePageAction:IAction
+public class HomePageAction : IAction
 {
     public int UserId;
 

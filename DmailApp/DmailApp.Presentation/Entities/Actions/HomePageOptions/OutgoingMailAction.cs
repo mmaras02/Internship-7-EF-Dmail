@@ -17,7 +17,7 @@ public class OutgoingMailAction : IAction
         var index = 0;
 
         List<Mail> outgoing = mailRepository.GetSentMail(UserId)
-            .OrderByDescending(m=>m.TimeOfSending)
+            .OrderByDescending(m => m.TimeOfSending)
             .ToList();
 
         foreach (var item in outgoing)
@@ -26,14 +26,14 @@ public class OutgoingMailAction : IAction
             Console.WriteLine($"{++index}. Title: {item.Title}\nSent to: {ReadEmail(recipients)}\n");
         }
         if (index == 0)
-            PrintMessage("You didn't send any messages ",ResponseResultType.NoChanges);
+            PrintMessage("You didn't send any messages ", ResponseResultType.NoChanges);
 
-        FilterMail(UserId, index, outgoing,false);
+        FilterMail(UserId, index, outgoing, false);
 
         UserInput("to go back to menu");
-        return  new HomePageAction { UserId= UserId };  
+        return new HomePageAction { UserId = UserId };
     }
-    public string ReadEmail(ICollection<User>recipients)
+    public string ReadEmail(ICollection<User> recipients)
     {
         return string.Join(",", recipients.Select(x => x.Email));
     }

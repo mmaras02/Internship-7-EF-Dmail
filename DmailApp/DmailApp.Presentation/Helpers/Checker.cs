@@ -1,10 +1,4 @@
-﻿using DmailApp.Data.Entities.Models;
-using DmailApp.Domain.Enums;
-using DmailApp.Domain.Factories;
-using DmailApp.Presentation.Entities.Actions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DmailApp.Domain.Enums;
 
 namespace DmailApp.Presentation.Helpers;
 
@@ -12,7 +6,7 @@ public static class Checker
 {
     public static int NumberInput(int maxNumber)
     {
-        while(true)
+        while (true)
         {
             Console.WriteLine("Your input: ");
             var input = Console.ReadLine();
@@ -38,20 +32,20 @@ public static class Checker
         result = suspectString;
         return true;
     }
-    public static string TextInput(Func<string, bool> valid,Func<string>read)
+    public static string TextInput(Func<string, bool> valid, Func<string> read)
     {
-        while(true)
+        while (true)
         {
             Console.WriteLine("Your input: ");
-            var input=read();
+            var input = read();
 
-            if(valid(input))
+            if (valid(input))
                 return input;
 
-            PrintMessage("wrong input! Try again! ",ResponseResultType.Error);
+            PrintMessage("wrong input! Try again! ", ResponseResultType.Error);
         }
     }
-    public static string CheckEmail(Func<string, bool> valid) => TextInput(valid, Console.ReadLine); 
+    public static string CheckEmail(Func<string, bool> valid) => TextInput(valid, Console.ReadLine);
     public static string PasswordInput(Func<string, bool> valid) => TextInput(valid, ReadPassword);
     public static string ReadPassword()
     {
@@ -83,14 +77,14 @@ public static class Checker
     }
     public static void UserInput(string message)
     {
-        Console.WriteLine($"\nPress any key "+ message);
+        Console.WriteLine($"\nPress any key " + message);
         Console.ReadKey();
     }
     public static bool GetConfirmation(string message)
     {
         while (true)
         {
-            Console.Write("Are you sure you want to "+ message + "(y/n): ");
+            Console.Write("\nAre you sure you want to " + message + "(y/n): ");
             string input = Console.ReadLine().Trim().ToLower();
 
             if (input == "y" || input == "yes") return true;

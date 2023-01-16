@@ -1,5 +1,4 @@
 ﻿using DmailApp.Presentation.Entities.Interfaces;
-using System;
 
 namespace DmailApp.Presentation.Entities.Actions;
 

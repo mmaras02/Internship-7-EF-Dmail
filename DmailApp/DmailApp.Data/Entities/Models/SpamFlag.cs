@@ -1,6 +1,3 @@
-using DmailApp.Data.Entities.Enums;
-using DmailApp.Data.Entities.Models;
-
 namespace DmailApp.Data.Entities.Models;
 
 public class SpamFlag

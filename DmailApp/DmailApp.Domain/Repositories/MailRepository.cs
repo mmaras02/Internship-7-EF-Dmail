@@ -1,9 +1,9 @@
 ﻿using DmailApp.Data.Entities;
-using DmailApp.Data.Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using DmailApp.Domain.Enums;
 using DmailApp.Data.Entities.Enums;
+using DmailApp.Data.Entities.Models;
+using DmailApp.Domain.Enums;
 using DmailApp.Domain.Factories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DmailApp.Domain.Repositories;
 
@@ -32,30 +32,16 @@ public class MailRepository : BaseRepository
 
         return SaveChanges();
     }
-
-    public ResponseResultType Update(Mail mail, int id)
-    {
-        var mailToUpdate = DbContext.Mails.Find(id);
-        if (mailToUpdate is null)
-            return ResponseResultType.NotFound;
-
-        mailToUpdate.Title = mail.Title;
-        mailToUpdate.TimeOfSending = mail.TimeOfSending;
-        mailToUpdate.SenderId = mail.SenderId;
-
-        return SaveChanges();
-    }
     public ICollection<Mail> GetAll() => DbContext.Mails
             .Include(m => m.Sender)
             .Include(m => m.Recipients)
             .ToList();
-    public ICollection<Mail> GetEmails() => GetAll().Where(m=>m.MailType==MailType.MessageMail).ToList();
-    public ICollection<Mail> GetEvents() => GetAll().Where(m=>m.MailType==MailType.EventMail).ToList();
-    public ICollection<Mail> GetSender(int id) => GetAll().Where(m => m.SenderId == id).ToList();
+    public ICollection<Mail> GetEmails() => GetAll().Where(m => m.MailType == MailType.MessageMail).ToList();
+    public ICollection<Mail> GetEvents() => GetAll().Where(m => m.MailType == MailType.EventMail).ToList();
     public Mail? GetById(int id) => DbContext.Mails.FirstOrDefault(m => m.MailId == id);
-   
+
     public ICollection<User> GetRecipients(int mailId)
-    { 
+    {
         var recipient = DbContext.Recipients
             .Where(rm => rm.MailId == mailId)
             .ToList();
@@ -65,10 +51,10 @@ public class MailRepository : BaseRepository
         {
             receivers.Add(userRepository.GetById(user.ReceiverId));
         }
-       
+
         return receivers;
     }
-    public List<Mail>GetReadMail(int userId)
+    public List<Mail> GetReadMail(int userId)
     {
         var readMail = GetAll()
             .Join(DbContext.Recipients,
@@ -81,7 +67,7 @@ public class MailRepository : BaseRepository
         List<Mail> readList = new List<Mail>();
         foreach (var item in readMail)
         {
-            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id,item.SenderId) is null)
+            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id, item.SenderId) is null)
                 readList.Add(item);
         }
         return readList;
@@ -99,7 +85,7 @@ public class MailRepository : BaseRepository
         List<Mail> unreadList = new List<Mail>();
         foreach (var item in unreadMail)
         {
-            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id, item.SenderId)is null)
+            if (DbContext.SpamFlag.Find(userRepository.GetById(userId).Id, item.SenderId) is null)
                 unreadList.Add(item);
         }
         return unreadList;
@@ -117,11 +103,11 @@ public class MailRepository : BaseRepository
         var mailToUpdate = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mail.MailId);
         if (mailToUpdate is null)
             return ResponseResultType.NoChanges;
-    
+
         mailToUpdate.MailStatus = MailStatus.Unread;
         return SaveChanges();
     }
-    public EventStatus ChangeEventStatus(Mail mail,EventStatus status)
+    public EventStatus ChangeEventStatus(Mail mail, EventStatus status)
     {
         var eventToUpdate = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mail.MailId);
         if (eventToUpdate is null)
@@ -135,10 +121,10 @@ public class MailRepository : BaseRepository
         var status = DbContext.Recipients.FirstOrDefault(rm => rm.MailId == mailId);
         return (EventStatus)status.EventStatus;
     }
-    public ICollection<Mail>GetSentMail(int userId)
+    public ICollection<Mail> GetSentMail(int userId)
     {
-        var sent=DbContext.Mails
-            .Where(m=>m.SenderId==userId).ToList();
+        var sent = DbContext.Mails
+            .Where(m => m.SenderId == userId).ToList();
 
         return sent;
     }
@@ -149,19 +135,19 @@ public class MailRepository : BaseRepository
             .ToList();
         return userIds.Last() + 1;
     }
-    public List<Mail>SearchByString(int userId,string query)
+    public List<Mail> SearchByString(int userId, string query)
     {
-        var result=DbContext.Recipients
-            .Where(rm=>rm.ReceiverId==userId)
-            .Join(DbContext.Mails,rm=>rm.MailId,m=>m.MailId,(rm,m)=>new {rm,m})
-            .Where(a=>a.m.Sender.Email.Contains(query))
-            .Select(a=>a.m)
-            .OrderByDescending(m=>m.TimeOfSending)
+        var result = DbContext.Recipients
+            .Where(rm => rm.ReceiverId == userId)
+            .Join(DbContext.Mails, rm => rm.MailId, m => m.MailId, (rm, m) => new { rm, m })
+            .Where(a => a.m.Sender.Email.Contains(query))
+            .Select(a => a.m)
+            .OrderByDescending(m => m.TimeOfSending)
             .ToList();
 
         return result;
     }
-    public ResponseResultType NewMail(int userId,int receiverId)
+    public ResponseResultType NewMail(int userId, int receiverId)
     {
         Console.WriteLine("Enter title: ");
         var title = Console.ReadLine();
@@ -180,10 +166,6 @@ public class MailRepository : BaseRepository
 
         Add(newMail);
 
-        Console.WriteLine("Are you sure you want to send this mail? (y/n)");
-        if (Console.ReadLine() != "y")
-            return ResponseResultType.Error;
-
         ReceiverMail newReceiverMail = new()
         {
             MailId = newMail.MailId,
@@ -191,6 +173,11 @@ public class MailRepository : BaseRepository
             MailStatus = MailStatus.Unread
         };
         var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
+
+        Console.WriteLine("Are you sure you want to send this mail? (y/n)");
+        if (Console.ReadLine() != "y")
+            return ResponseResultType.Error;
+
         receiverMailRepository.Add(newReceiverMail);
 
         return ResponseResultType.Success;

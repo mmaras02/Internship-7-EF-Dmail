@@ -20,7 +20,7 @@ public class SendEventAction : IAction
 
         Console.WriteLine("Enter title: ");
         var validTitle = CheckString(Console.ReadLine(), out string title);
-        
+
         Console.WriteLine("Enter event date start (yyyy-MM-dd HH:mm:ss): ");
         var validDate = DateTime.TryParse(Console.ReadLine(), out DateTime dateInput);
 
@@ -38,8 +38,8 @@ public class SendEventAction : IAction
             SenderId = UserId,
             MailType = MailType.MessageMail,
             TimeOfSending = DateTime.UtcNow.Date,
-            EventTime=dateInput,
-            EventDuration=durationInput,
+            EventTime = dateInput,
+            EventDuration = durationInput,
         };
 
         mailRepository.Add(newMail);
@@ -47,7 +47,7 @@ public class SendEventAction : IAction
         Console.WriteLine("Enter receivers emails (separate with <, >):");
         string[] emails = Console.ReadLine().Split(", ");
 
-        if (!GetConfirmation("send this event? " ))
+        if (!GetConfirmation("send this event? "))
         {
             PrintMessage("Sending stopped", ResponseResultType.Warning);
             return new HomePageAction { UserId = UserId };
@@ -62,7 +62,7 @@ public class SendEventAction : IAction
                 MailId = newMail.MailId,
                 ReceiverId = userRepository.GetIdByEmail(item),
                 MailStatus = MailStatus.Unread,
-                EventStatus=EventStatus.NoResponse
+                EventStatus = EventStatus.NoResponse
             };
             receiverMailRepository.Add(newReceiverMail);
         }
