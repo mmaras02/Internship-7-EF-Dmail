@@ -161,4 +161,38 @@ public class MailRepository : BaseRepository
 
         return result;
     }
+    public ResponseResultType NewMail(int userId,int receiverId)
+    {
+        Console.WriteLine("Enter title: ");
+        var title = Console.ReadLine();
+
+        Console.WriteLine("Enter mail content: ");
+        var content = Console.ReadLine();
+
+        Mail newMail = new(title)
+        {
+            MailId = GetFreeId(),
+            SenderId = userId,
+            MailType = MailType.MessageMail,
+            TimeOfSending = DateTime.UtcNow.Date,
+            Content = content
+        };
+
+        Add(newMail);
+
+        Console.WriteLine("Are you sure you want to send this mail? (y/n)");
+        if (Console.ReadLine() != "y")
+            return ResponseResultType.Error;
+
+        ReceiverMail newReceiverMail = new()
+        {
+            MailId = newMail.MailId,
+            ReceiverId = receiverId,
+            MailStatus = MailStatus.Unread
+        };
+        var receiverMailRepository = RepositoryFactory.Create<ReceiverMailRepository>();
+        receiverMailRepository.Add(newReceiverMail);
+
+        return ResponseResultType.Success;
+    }
 }

@@ -62,7 +62,7 @@ public static class Printer
     public static void PrintOptions()
     {
         Console.WriteLine("\nYour options for choosen mail:");
-        Console.WriteLine("1.Mark as unread\n2.Mark as spam\n3.Delete mail\n4.Replay to mail\n0.Go back to primary mail");
+        Console.WriteLine("1.Mark as unread\n2.Mark as spam\n3.Delete mail\n4.Reply to mail\n0.Go back to primary mail");
     }
     public static void ReadMail(int userId, List<Mail> mail,bool inbox)
     {
@@ -133,6 +133,10 @@ public static class Printer
                 {
                     Console.WriteLine("Answer the event invitation:");
                     Console.WriteLine("1.Accept invitation\n2.Decline invitation\n0.Leave unanswered");
+
+                    if (!GetConfirmation("take this action?"))
+                        return;
+
                     switch(NumberInput(maxNumber:2))
                     {
                         case 1:
@@ -150,8 +154,19 @@ public static class Printer
                             return;
                     }
                 }
-               
-                return;
+                if(mail.MailType==MailType.MessageMail)
+                {
+                    if(mailRepository.NewMail(userId, mail.SenderId)==ResponseResultType.Error)
+                    {
+                        PrintMessage("Action stopped!\nReturning... ",ResponseResultType.ValidationError);
+                        return;  
+                    }
+                    PrintMessage("Mail sent successfully!", ResponseResultType.Success);
+                    return;
+                }
+                
+                break;
+              
             default:
                 return;
         }
