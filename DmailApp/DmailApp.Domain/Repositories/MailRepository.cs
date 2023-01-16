@@ -74,22 +74,38 @@ public class MailRepository : BaseRepository
        
         return receivers;
     }
-    public ICollection<Mail> GetSpamMail(int userId)
+    public List<Mail>GetReadSpamMail(int userId)
     {
-        var spamMail = GetAll()
-            .Join(DbContext.Recipients,
-                m => m.MailId,
-                rm => rm.MailId,
-                (m, rm) => new { m, rm })
-            .Where(a => a.rm.ReceiverId == userId)
-            .Select(a => a.m).ToList()
-            .Join(DbContext.SpamFlag,
-                m => m.SenderId,
-                sf => sf.UserId,
-                (m, sf) => new { m, sf })
-            .Select(a => a.m).ToList();
+        var readSpam=DbContext.Recipients
+            .Where(rm=>rm.ReceiverId==userId)
+            .Where(rm=>rm.MailStatus== MailStatus.Read) 
+            .Join(DbContext.Mails,rm=>rm.MailId,m=>m.MailId,(rm, m) => new {rm, m})
+            .Select(a=>a.m)
+            .OrderByDescending(m=>m.TimeOfSending)
+            .ToList();
+        foreach(var item in readSpam)
+        {
+            if (DbContext.SpamFlag.Find(userId, item.Sender) != null)
+                readSpam.Remove(item);
+        }
+        return readSpam;
+    }
+    public List<Mail> GetUnreadSpamMail(int userId)
+    {
+        var unreadSpam = DbContext.Recipients
+            .Where(rm => rm.ReceiverId == userId)
+            .Where(rm => rm.MailStatus == MailStatus.Unread)
+            .Join(DbContext.Mails, rm => rm.MailId, m => m.MailId, (rm, m) => new { rm, m })
+            .Select(a => a.m)
+            .OrderByDescending(m => m.TimeOfSending)
+            .ToList();
 
-        return spamMail;
+        foreach (var item in unreadSpam)
+        {
+            if (DbContext.SpamFlag.Find(userId, item.Sender) != null)
+                unreadSpam.Remove(item);
+        }
+        return unreadSpam;
     }
     public List<Mail>GetReadMail(int userId)
     {
@@ -145,7 +161,15 @@ public class MailRepository : BaseRepository
             .ToList();
         return userIds.Last() + 1;
     }
-
-    //search spam
-    //get sent mail
+    public List<Mail>SearchByString(int userId,string query)
+    {
+        var result=DbContext.Recipients
+            .Where(rm=>rm.ReceiverId==userId)
+            .Join(DbContext.Mails,rm=>rm.MailId,m=>m.MailId,(rm,m)=>new {rm,m})
+            .Where(a=>a.m.Sender.Email.Contains(query))
+            .Select(a=>a.m)
+            .OrderByDescending(m=>m.TimeOfSending)
+            .ToList();
+        return result;
+    }
 }

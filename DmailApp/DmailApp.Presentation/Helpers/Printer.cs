@@ -57,37 +57,12 @@ public static class Printer
     }
     public static void PrintInbox()
     {
-        PrintTitle("Inbox Mail");
         Console.WriteLine("\n1.Read mail\n2.Unread mail\n3.Search mail from user\n0.Back to main menu\n");
     }
     public static void PrintOptions()
     {
         Console.WriteLine("\nYour options for choosen mail:");
         Console.WriteLine("1.Mark as unread\n2.Mark as spam\n3.Delete mail\n4.Replay to mail\n0.Go back to primary mail");
-    }
-    public static ResponseResultType PrintSpamMail(int userId)
-    {
-        PrintTitle("Spam page");
-
-        var spam = spamRepository.GetAllSpam(userId).ToList();
-        List<int> spamIds = new List<int>();
-
-        foreach (var item in spam)
-            spamIds.Add(item.SpamUserId);
-
-        if(spamIds.Count is 0 )
-        {
-            PrintMessage("you don't have any users marked as spam", ResponseResultType.Error);
-            return ResponseResultType.Error;
-        }
-        Console.WriteLine("List of users you marked as spam:");
-        foreach (var item in spamIds)
-            Console.WriteLine(userRepository.GetById(item).Email);
-
-        Console.WriteLine("\nAvailable options are:");
-        Console.WriteLine($"1.Mark new spam user\n2.Remove spam user\n0.back to home page\n");
-
-        return ResponseResultType.Success;
     }
     public static void ReadMail(int userId, List<Mail> mail,bool inbox)
     {
@@ -117,7 +92,7 @@ public static class Printer
         if (input < 0 && input >= index)
             PrintMessage("Incorrect input! ", ResponseResultType.Error);
 
-        PrintMail(mail[input - 1].MailId, userId);
+        PrintDetailedMail(mail[input - 1].MailId, userId);
         var message = mailRepository.GetById(mail[input - 1].MailId);
 
         if (!inbox)
@@ -159,7 +134,7 @@ public static class Printer
                 return;
         }
     }
-    public static void PrintMail(int mailId, int userId)
+    public static void PrintDetailedMail(int mailId, int userId)
     {
         Mail mail = mailRepository.GetById(mailId);
 
