@@ -27,7 +27,7 @@ public class ProfileSettingsAction : IAction
 
         List<int> everyId = receiversIds.Concat(senderIds).Distinct().ToList();
 
-        Console.WriteLine($"\nDo you want to access user? <y>");
+        Console.WriteLine($"\nDo you want to access user? (y/n)");
         var access=Console.ReadLine();
 
         if (access != "y")
@@ -35,6 +35,7 @@ public class ProfileSettingsAction : IAction
             PrintMessage("Going back to home page...", ResponseResultType.Success);
             return new HomePageAction { UserId=UserId };
         }
+        Console.Clear();
         var index = 0;
         foreach(var item in everyId)
         {
@@ -46,7 +47,6 @@ public class ProfileSettingsAction : IAction
 
         if (!markedSpam.Contains(everyId[input - 1]))
         {
-            //Console.WriteLine("User is not spam. Mark it as spam? <y>");//napravi f-ju
             spamRepository.MarkSpam(UserId, userRepository.GetById(everyId[input - 1]).Id);
             PrintMessage("Successfully marked as spam!\nGoing back to main menu ", ResponseResultType.Success);
             return new HomePageAction { UserId = UserId };

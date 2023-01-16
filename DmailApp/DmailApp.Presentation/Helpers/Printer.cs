@@ -85,6 +85,7 @@ public static class Printer
         Console.WriteLine("\nNumber of the mail you want to filter\n0.Go back to main");
         int.TryParse(Console.ReadLine(), out int input);
 
+        Console.Clear();
         if (input is 0)
             return;
 

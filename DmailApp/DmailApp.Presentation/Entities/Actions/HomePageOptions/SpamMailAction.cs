@@ -19,16 +19,19 @@ public class SpamMailAction : IAction
         switch (NumberInput(maxNumber: 3))
         {
             case 1:
+                Console.Clear();
                 var readSpam = spamRepository.GetReadSpamMail(UserId);
                 ReadMail(UserId, readSpam, true);
 
                 return new SpamMailAction { UserId = UserId };
             case 2:
+                Console.Clear();
                 var unreadSpam = spamRepository.GetUnreadSpamMail(UserId);
                 ReadMail(UserId, unreadSpam, true);
 
                 return new SpamMailAction { UserId = UserId };
             case 3:
+                Console.Clear();
                 CheckSearchedInput(UserId);
 
                 return new SpamMailAction { UserId = UserId };

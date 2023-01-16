@@ -18,16 +18,19 @@ public class PrimaryMailAction : IAction
         switch(NumberInput(maxNumber: 3))
         {
             case 1:
+                Console.Clear();
                 var readMail = mailRepository.GetReadMail(UserId);
                 ReadMail(UserId,readMail,true);
 
                 return new PrimaryMailAction { UserId = UserId }; 
             case 2:
+                Console.Clear();
                 var readMails = mailRepository.GetUnreadMail(UserId);
                 ReadMail(UserId, readMails,true);
 
                 return new PrimaryMailAction { UserId = UserId };
             case 3:
+                Console.Clear();
                 CheckSearchedInput(UserId);
                 return new PrimaryMailAction { UserId = UserId };
                 break;
